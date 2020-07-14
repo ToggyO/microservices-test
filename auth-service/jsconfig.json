@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": false,
+    "baseUrl": "./",
+    "paths": {
+      "@src": ["./src/*"],
+      "@config": ["./src/config/*"],
+      "@constants": ["./src/constants/*"],
+      "@db": ["./src/db/*"],
+      "@launch": ["./src/launch/*"],
+      "@modules": ["./src/modules/*"],
+      "@utils": ["./src/utils/*"]
+    }
+  },
+  "include": ["./src/**/*"]
+}

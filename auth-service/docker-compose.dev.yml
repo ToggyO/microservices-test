@@ -1,0 +1,18 @@
+version: '3'
+services:
+  service-sequelize-postgres:
+    container_name: sequelize-postgres
+    image: postgres:12.1
+    restart: always
+    env_file: .env.development
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    volumes:
+      - 'sequelize-postgres:/var/lib/postgresql/data'
+    ports:
+      - ${POSTGRES_EXTERNAL_PORT}:${POSTGRES_PORT}
+
+volumes:
+  sequelize-postgres:

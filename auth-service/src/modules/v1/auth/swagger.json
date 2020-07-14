@@ -1,0 +1,33 @@
+{
+  "schemas": {
+	"Tokens": {
+	  "type": "object",
+	  "properties": {
+		"accessToken": {
+			"type": "string"
+		},
+		"refreshToken": {
+			"type": "string"
+		},
+		"expire": {
+			"type": "string"
+		}
+	  }
+	},
+    "AuthType": {
+      "type": "object",
+      "properties": {
+		"id": {
+			"type": "number"
+		},
+		"email": {
+			"type": "string"
+		},
+		"tokens": {
+			"type": "object",
+			"$ref": "#/components/schemas/Tokens"
+		}
+      }
+	}
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": true
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    ["module-resolver", {
+      "root": [
+        "./src"
+      ],
+      "alias": {
+        "@src": "./src/",
+        "@config": "./src/config/",
+        "@constants": "./src/constants/",
+        "@db": "./src/db/",
+        "@launch": "./src/launch/",
+        "@modules": "./src/modules/",
+        "@utils": "./src/utils/"
+      }
+    }],
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-proposal-class-properties"
+  ],
+  "env": {
+    "debug": {
+      "sourceMaps": "inline",
+      "retainLines": true
+    }
+  }
+}

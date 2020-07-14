@@ -1,0 +1,10 @@
+version: '3'
+services:
+  nginx:
+    image: nginx:1.19.1
+    ports:
+      - 80:80
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d
+      - ./example.conf:/etc/sites-available
+      - ./example.conf:/etc/sites-enabled

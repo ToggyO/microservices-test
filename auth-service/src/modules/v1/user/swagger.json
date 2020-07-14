@@ -1,0 +1,52 @@
+{
+  "schemas": {
+    "CreateUser": {
+      "type": "object",
+      "properties": {
+		"email": {
+			"type": "string"
+		},
+		"password": {
+			"type": "string"
+		},
+        "name": {
+			"type": "string"
+		},
+		"age": {
+			"type": "number"
+		}
+      }
+	},
+	"User": {
+      "type": "object",
+      "properties": {
+		"id": {
+			"type": "number"
+		},
+		"name": {
+			"type": "string"
+		},
+		"age": {
+			"type": "number"
+		},
+		"createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      }
+    },
+  	"UpdateUser": {
+		"type": "object",
+		"properties": {
+			"name": {
+				"type": "string"
+			},
+			"age": {
+				"type": "number"
+			}
+		}
+	}
+  }
+}
