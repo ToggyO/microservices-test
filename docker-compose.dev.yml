@@ -1,10 +1,52 @@
-version: '3'
+version: '3.3'
 services:
-  nginx:
+  microservices-auth-service-postgres-dev:
+    container_name: auth-service-postgres-dev
+    image: postgres:12.1
+    restart: always
+#    build: ./auth-service
+#      context: ./auth-service
+#      dockerfile: Dockerfile
+#    env_file: .env
+    environment:
+      POSTGRES_USER: ${MIC_AUTH_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${MIC_AUTH_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${MIC_AUTH_POSTGRES_DATABASE}
+    volumes:
+      - 'auth-service-postgres-dev:/var/lib/postgresql/data'
+    ports:
+      - ${MIC_AUTH_POSTGRES_EXTERNAL_PORT}:${MIC_AUTH_POSTGRES_PORT}
+
+  microservices-auth-service-dev:
+    container_name: auth-service-dev
+    build: ./auth-service
+#    env_file: .env
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - ../microservices-test-volumes/sequelize-test-logs:/usr/app/log
+    links:
+      - microservices-auth-service-postgres-dev
+    depends_on:
+      - microservices-auth-service-postgres-dev
+    networks:
+      - app-network
+
+  microservices-nginx-dev:
+    container_name: nginx-dev
     image: nginx:1.19.1
     ports:
       - 80:80
     volumes:
-      - ./default.conf:/etc/nginx/conf.d
-      - ./example.conf:/etc/sites-available
-      - ./example.conf:/etc/sites-enabled
+      - ./example.localhost.conf:/etc/nginx/conf.d/example.localhost.conf
+    networks:
+      - app-network
+    depends_on:
+      - microservices-auth-service-dev
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  auth-service-postgres-dev:

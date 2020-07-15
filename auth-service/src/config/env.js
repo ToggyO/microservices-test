@@ -1,5 +1,5 @@
 /**
- * Описание: файл для импорта конфигурации приложения из .env файлов
+ * Описание: файл для импорта конфигурации приложения из .env.development файлов
  */
 import fs from 'fs';
 import path from 'path';
@@ -9,7 +9,7 @@ const { env } = process;
 
 const dotenvDir = path.join(
   process.cwd(),
-  // env.NODE_ENV === 'production' ? '.env' : '.env',
+  // env.NODE_ENV === 'production' ? '.env.development' : '.env.development',
   env.NODE_ENV === 'production' ? '.env' : '.env.development',
 );
 const defaultEnvVariables = dotenv.parse(fs.readFileSync(dotenvDir));
