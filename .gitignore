@@ -16,6 +16,7 @@
 */npm-debug.log
 */.tmp
 */log
+*/nginx_logs
 
 .idea
 .vscode
