@@ -10,9 +10,9 @@ import { db } from '../db';
  * @returns {Promise<void>}
  */
 export const run = async ({ app }) => {
-  db.init(config.POSTGRES_DATABASE, config.POSTGRES_USER, config.POSTGRES_PASSWORD, {
-    host: config.POSTGRES_HOST,
-    port: config.POSTGRES_PORT,
+  db.init(config.MIC_AUTH_POSTGRES_DATABASE, config.MIC_AUTH_POSTGRES_USER, config.MIC_AUTH_POSTGRES_PASSWORD, {
+    host: config.MIC_AUTH_POSTGRES_HOST,
+    port: config.MIC_AUTH_POSTGRES_PORT,
     dialect: 'postgres',
     logging: false,
     pool: {

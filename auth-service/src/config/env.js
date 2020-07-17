@@ -5,24 +5,24 @@ import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
 
+import allowedEnvList from '../../env_list';
 const { env } = process;
+const cloneEnv = { ...env };
 
-const dotenvDir = path.join(
-  process.cwd(),
-  // env.NODE_ENV === 'production' ? '.env.development' : '.env.development',
-  env.NODE_ENV === 'production' ? '.env' : '.env.development',
-);
-const defaultEnvVariables = dotenv.parse(fs.readFileSync(dotenvDir));
+// const envDir = path.join(
+//   process.cwd(),
+//   'env_list',
+// );
+// const defaultEnvVariables = dotenv.parse(fs.readFileSync(envDir));
 
 const envVariables = Object.keys(process.env).reduce((accumulator, envName) => {
-  if (Object.keys(defaultEnvVariables).includes(envName)) {
+  if (allowedEnvList.includes(envName)) {
     accumulator[envName] = process.env[envName];
   }
   return accumulator;
 }, {});
 
 const resultEnvVariables = {
-  ...defaultEnvVariables,
   ...envVariables,
 };
 const variablesForPrint = Object.keys(resultEnvVariables).reduce((accumulator, envName) => {
