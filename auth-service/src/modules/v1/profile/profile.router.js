@@ -18,7 +18,7 @@ export const createRouter = () => {
    * Get profile of the current user
    * @swagger
    * path:
-   *  /profile/me:
+   *  /account/profile/me:
    *      get:
    *        tags:
    *          - Profile
@@ -67,7 +67,7 @@ export const createRouter = () => {
    * Update current user
    * @swagger
    * path:
-   *  /profile/me:
+   *  /account/profile/me:
    *      put:
    *        tags:
    *          - Profile

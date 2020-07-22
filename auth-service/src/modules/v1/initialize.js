@@ -77,9 +77,13 @@ export const initializeSwagger = ({ basePath }) => {
       basePath,
       servers: [
         {
-          url: `http://${config.HOST}:${config.PORT}`,
+          url: isProduction ? 'http://example.localhost:8080' : `http://${config.HOST}:${config.PORT}`,
           description: `${isProduction ? 'Production' : 'Local'} server`,
         },
+        // {
+        //   url: `http://${config.HOST}:${config.PORT}`,
+        //   description: `${isProduction ? 'Production' : 'Local'} server`,
+        // },
       ],
       components: {
         securitySchemes: {

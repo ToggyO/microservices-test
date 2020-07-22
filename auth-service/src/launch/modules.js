@@ -24,6 +24,6 @@ export const run = ({ app }) => {
     useTempFiles: true,
     tempFileDir: config.TEMP_DIR,
   }));
-  app.use('/', createV1Router());
+  app.use(config.MIC_ACCOUNT_ROUTE_PREFIX, createV1Router());
   app.use(config.API_URL_PREFIX, swaggerUi.serve, initializeSwagger({ basePath: '/' }));
 };

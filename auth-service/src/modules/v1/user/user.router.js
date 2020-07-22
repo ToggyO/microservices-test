@@ -17,7 +17,7 @@ export const createRouter = () => {
 	 * Get list of users
 	 * @swagger
 	 * path:
-	 *  /users:
+	 *  /account/users:
 	 *      get:
 	 *        tags:
 	 *          - Users
@@ -68,7 +68,7 @@ export const createRouter = () => {
 	 * Get list user by id
 	 * @swagger
 	 * path:
-	 *  /users/{id}:
+	 *  /account/users/{id}:
 	 *      get:
 	 *        tags:
 	 *          - Users
@@ -123,7 +123,7 @@ export const createRouter = () => {
 	 * Create user
 	 * @swagger
 	 * path:
-	 *  /users:
+	 *  /account/users:
 	 *      post:
 	 *        tags:
 	 *          - Users
@@ -174,7 +174,7 @@ export const createRouter = () => {
 	 * Update user
 	 * @swagger
 	 * path:
-	 *  /users/{id}:
+	 *  /account/users/{id}:
 	 *      put:
 	 *        tags:
 	 *          - Users
@@ -233,7 +233,7 @@ export const createRouter = () => {
 	 * Delete user by id
 	 * @swagger
 	 * path:
-	 *  /users/{id}:
+	 *  /account/users/{id}:
 	 *      delete:
 	 *        tags:
 	 *          - Users
