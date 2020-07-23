@@ -1,21 +1,21 @@
 version: '3.3'
 services:
-  microservices-auth-service-postgres-dev:
-    container_name: auth-service-postgres-dev
+  microservices-account-service-postgres-dev:
+    container_name: account-service-postgres-dev
     image: postgres:12.1
     restart: always
     environment:
-      POSTGRES_USER: ${MIC_AUTH_POSTGRES_USER}
-      POSTGRES_PASSWORD: ${MIC_AUTH_POSTGRES_PASSWORD}
-      POSTGRES_DB: ${MIC_AUTH_POSTGRES_DATABASE}
+      POSTGRES_USER: ${MIC_ACCOUNT_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${MIC_ACCOUNT_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${MIC_ACCOUNT_POSTGRES_DATABASE}
     volumes:
-      - 'auth-service-postgres-dev:/var/lib/postgresql/data'
+      - 'account-service-postgres-dev:/var/lib/postgresql/data'
     ports:
-      - ${MIC_AUTH_POSTGRES_EXTERNAL_PORT}:${MIC_AUTH_POSTGRES_PORT}
+      - ${MIC_ACCOUNT_POSTGRES_EXTERNAL_PORT}:${MIC_ACCOUNT_POSTGRES_PORT}
     networks:
       - app-network
 
-  microservices-auth-service-dev:
+  microservices-account-service-dev:
     container_name: auth-service-dev
     build: ./auth-service
     restart: always
@@ -32,12 +32,13 @@ services:
       JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN}
       JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
       PEPPER: ${PEPPER}
-      MIC_AUTH_POSTGRES_HOST: ${MIC_AUTH_POSTGRES_HOST}
-      MIC_AUTH_POSTGRES_PORT: ${MIC_AUTH_POSTGRES_PORT}
-      MIC_AUTH_POSTGRES_EXTERNAL_PORT: ${MIC_AUTH_POSTGRES_EXTERNAL_PORT}
-      MIC_AUTH_POSTGRES_USER: ${MIC_AUTH_POSTGRES_USER}
-      MIC_AUTH_POSTGRES_DATABASE: ${MIC_AUTH_POSTGRES_DATABASE}
-      MIC_AUTH_POSTGRES_PASSWORD: ${MIC_AUTH_POSTGRES_PASSWORD}
+      MIC_ACCOUNT_ROUTE_PREFIX: ${MIC_ACCOUNT_ROUTE_PREFIX}
+      MIC_ACCOUNT_POSTGRES_HOST: ${MIC_ACCOUNT_POSTGRES_HOST}
+      MIC_ACCOUNT_POSTGRES_PORT: ${MIC_ACCOUNT_POSTGRES_PORT}
+      MIC_ACCOUNT_POSTGRES_EXTERNAL_PORT: ${MIC_ACCOUNT_POSTGRES_EXTERNAL_PORT}
+      MIC_ACCOUNT_POSTGRES_USER: ${MIC_ACCOUNT_POSTGRES_USER}
+      MIC_ACCOUNT_POSTGRES_DATABASE: ${MIC_ACCOUNT_POSTGRES_DATABASE}
+      MIC_ACCOUNT_POSTGRES_PASSWORD: ${MIC_ACCOUNT_POSTGRES_PASSWORD}
       TEMP_DIR: ${TEMP_DIR}
       UPLOAD_MAX_FILESIZE_MB: ${UPLOAD_MAX_FILESIZE_MB}
     ports:
@@ -45,9 +46,9 @@ services:
     volumes:
       - ../microservices-test-volumes/sequelize-test-logs:/usr/app/log
     links:
-      - microservices-auth-service-postgres-dev
+      - microservices-account-service-postgres-dev
     depends_on:
-      - microservices-auth-service-postgres-dev
+      - microservices-account-service-postgres-dev
     networks:
       - app-network
 
@@ -63,13 +64,13 @@ services:
     networks:
       - app-network
     links:
-      - microservices-auth-service-dev
+      - microservices-account-service-dev
     depends_on:
-      - microservices-auth-service-dev
+      - microservices-account-service-dev
 
 networks:
   app-network:
     driver: bridge
 
 volumes:
-  auth-service-postgres-dev:
+  account-service-postgres-dev:
