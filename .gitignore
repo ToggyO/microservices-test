@@ -17,7 +17,6 @@
 */.tmp
 */log
 
-nginx_logs
 .idea
 .vscode
 .project
@@ -27,3 +26,4 @@ build
 npm-debug.log
 .tmp
 log
+/nginx_logs/
