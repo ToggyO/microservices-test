@@ -125,3 +125,5 @@
 172.19.0.1 - - [22/Jul/2020:11:59:47 +0000] "GET /users HTTP/1.1" 404 555 "http://example.localhost:8080/account/swagger/v1/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36"
 172.19.0.1 - - [23/Jul/2020:01:58:09 +0000] "GET /auth/users HTTP/1.1" 404 555 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36"
 172.19.0.1 - - [23/Jul/2020:01:58:10 +0000] "GET /favicon.ico HTTP/1.1" 404 555 "http://example.localhost:8080/auth/users" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36"
+172.22.0.1 - - [23/Jul/2020:08:07:40 +0000] "GET /favicon.ico HTTP/1.1" 404 555 "http://example.localhost:8080/account/swagger/v1" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36"
+192.168.0.171 - - [23/Jul/2020:09:51:55 +0000] "GET /favicon.ico HTTP/1.1" 404 555 "http://192.168.2.45:8080/account/users" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/83.0.4103.61 Chrome/83.0.4103.61 Safari/537.36"

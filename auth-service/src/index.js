@@ -21,11 +21,11 @@ export const init = (async () => {
     process.exit(1);
   }
 
-  const { PORT, HOST, NODE_ENV } = config;
+  const { MIC_ACCOUNT_PORT, MIC_ACCOUNT_HOST, NODE_ENV } = config;
 
-  app.listen({ port: PORT, host: HOST }, () => {
-    app.get('log').info(`Server running at http://${HOST}:${PORT}, in ${NODE_ENV} mode. `
-			+ `Swagger: http://${HOST}:${PORT}${config.API_URL_PREFIX}`);
+  app.listen({ port: MIC_ACCOUNT_PORT, host: MIC_ACCOUNT_HOST }, () => {
+    app.get('log').info(`Server running at http://${MIC_ACCOUNT_HOST}:${MIC_ACCOUNT_PORT}, in ${NODE_ENV} mode. `
+			+ `Swagger: http://${MIC_ACCOUNT_HOST}:${MIC_ACCOUNT_PORT}${config.API_URL_PREFIX}`);
   });
 
   return app;

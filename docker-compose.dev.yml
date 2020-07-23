@@ -4,6 +4,7 @@ services:
     container_name: account-service-postgres-dev
     image: postgres:12.1
     restart: always
+    env_file: .env.development
     environment:
       POSTGRES_USER: ${MIC_ACCOUNT_POSTGRES_USER}
       POSTGRES_PASSWORD: ${MIC_ACCOUNT_POSTGRES_PASSWORD}
@@ -12,65 +13,6 @@ services:
       - 'account-service-postgres-dev:/var/lib/postgresql/data'
     ports:
       - ${MIC_ACCOUNT_POSTGRES_EXTERNAL_PORT}:${MIC_ACCOUNT_POSTGRES_PORT}
-    networks:
-      - app-network
-
-  microservices-account-service-dev:
-    container_name: auth-service-dev
-    build: ./auth-service
-    restart: always
-    environment:
-      NODE_ENV: ${NODE_ENV}
-      HOST: ${HOST}
-      PORT: ${PORT}
-      API_VERSION: ${API_VERSION}
-      AUTHORIZATION_HEADER: ${AUTHORIZATION_HEADER}
-      CRON_CHECK_INVALID_TOKENS_DELAY_SECS: ${CRON_CHECK_INVALID_TOKENS_DELAY_SECS}
-      CRYPTO_SECRET: ${CRYPTO_SECRET}
-      JWT_SECRET: ${JWT_SECRET}
-      JWT_ACCESS_EXPIRES_IN: ${JWT_ACCESS_EXPIRES_IN}
-      JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN}
-      JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
-      PEPPER: ${PEPPER}
-      MIC_ACCOUNT_ROUTE_PREFIX: ${MIC_ACCOUNT_ROUTE_PREFIX}
-      MIC_ACCOUNT_POSTGRES_HOST: ${MIC_ACCOUNT_POSTGRES_HOST}
-      MIC_ACCOUNT_POSTGRES_PORT: ${MIC_ACCOUNT_POSTGRES_PORT}
-      MIC_ACCOUNT_POSTGRES_EXTERNAL_PORT: ${MIC_ACCOUNT_POSTGRES_EXTERNAL_PORT}
-      MIC_ACCOUNT_POSTGRES_USER: ${MIC_ACCOUNT_POSTGRES_USER}
-      MIC_ACCOUNT_POSTGRES_DATABASE: ${MIC_ACCOUNT_POSTGRES_DATABASE}
-      MIC_ACCOUNT_POSTGRES_PASSWORD: ${MIC_ACCOUNT_POSTGRES_PASSWORD}
-      TEMP_DIR: ${TEMP_DIR}
-      UPLOAD_MAX_FILESIZE_MB: ${UPLOAD_MAX_FILESIZE_MB}
-    ports:
-      - ${PORT}:${PORT}
-    volumes:
-      - ../microservices-test-volumes/sequelize-test-logs:/usr/app/log
-    links:
-      - microservices-account-service-postgres-dev
-    depends_on:
-      - microservices-account-service-postgres-dev
-    networks:
-      - app-network
-
-  microservices-nginx-dev:
-    container_name: nginx-dev
-    restart: always
-    image: nginx:1.19.1
-    ports:
-      - 8080:80
-    volumes:
-      - ./default.conf:/etc/nginx/conf.d/default.conf
-      - ./nginx_logs/:/var/log/nginx/
-    networks:
-      - app-network
-    links:
-      - microservices-account-service-dev
-    depends_on:
-      - microservices-account-service-dev
-
-networks:
-  app-network:
-    driver: bridge
 
 volumes:
   account-service-postgres-dev:

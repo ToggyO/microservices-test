@@ -57,7 +57,9 @@ export const initializeModels = ({ app } = {}) => {
  * @param {string} basePath
  */
 export const initializeSwagger = ({ basePath }) => {
-  const { isProduction } = config;
+  const {
+    isProduction
+  } = config;
 
   const modulesSwaggerSchemes = {
     /* eslint-disable global-require */
@@ -77,13 +79,11 @@ export const initializeSwagger = ({ basePath }) => {
       basePath,
       servers: [
         {
-          url: isProduction ? 'http://example.localhost:8080' : `http://${config.HOST}:${config.PORT}`,
+          url: isProduction
+            ? `http://${config.NGINX_HOST}:${config.NGINX_PORT}`
+            : `http://${config.HOST}:${config.PORT}`,
           description: `${isProduction ? 'Production' : 'Local'} server`,
         },
-        // {
-        //   url: `http://${config.HOST}:${config.PORT}`,
-        //   description: `${isProduction ? 'Production' : 'Local'} server`,
-        // },
       ],
       components: {
         securitySchemes: {

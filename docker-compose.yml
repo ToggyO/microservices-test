@@ -1,0 +1,78 @@
+version: '3.3'
+services:
+  microservices-account-service-postgres-prod:
+    container_name: account-service-postgres-prod
+    image: postgres:12.1
+    restart: always
+    environment:
+      POSTGRES_USER: ${MIC_ACCOUNT_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${MIC_ACCOUNT_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${MIC_ACCOUNT_POSTGRES_DATABASE}
+    volumes:
+      - 'account-service-postgres-prod:/var/lib/postgresql/data'
+    ports:
+      - ${MIC_ACCOUNT_POSTGRES_EXTERNAL_PORT}:${MIC_ACCOUNT_POSTGRES_PORT}
+    networks:
+      - app-network
+
+  microservices-account-service-prod:
+    container_name: auth-service-prod
+    build: ./auth-service
+    restart: always
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      NGINX_HOST: ${NGINX_HOST}
+      NGINX_PORT: ${NGINX_EXTERNAL_PORT}
+      MIC_ACCOUNT_HOST: ${MIC_ACCOUNT_HOST}
+      MIC_ACCOUNT_PORT: ${MIC_ACCOUNT_PORT}
+      API_VERSION: ${API_VERSION}
+      AUTHORIZATION_HEADER: ${AUTHORIZATION_HEADER}
+      CRON_CHECK_INVALID_TOKENS_DELAY_SECS: ${CRON_CHECK_INVALID_TOKENS_DELAY_SECS}
+      CRYPTO_SECRET: ${CRYPTO_SECRET}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ACCESS_EXPIRES_IN: ${JWT_ACCESS_EXPIRES_IN}
+      JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN}
+      JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
+      PEPPER: ${PEPPER}
+      MIC_ACCOUNT_ROUTE_PREFIX: ${MIC_ACCOUNT_ROUTE_PREFIX}
+      MIC_ACCOUNT_POSTGRES_HOST: ${MIC_ACCOUNT_POSTGRES_HOST}
+      MIC_ACCOUNT_POSTGRES_PORT: ${MIC_ACCOUNT_POSTGRES_PORT}
+      MIC_ACCOUNT_POSTGRES_EXTERNAL_PORT: ${MIC_ACCOUNT_POSTGRES_EXTERNAL_PORT}
+      MIC_ACCOUNT_POSTGRES_USER: ${MIC_ACCOUNT_POSTGRES_USER}
+      MIC_ACCOUNT_POSTGRES_DATABASE: ${MIC_ACCOUNT_POSTGRES_DATABASE}
+      MIC_ACCOUNT_POSTGRES_PASSWORD: ${MIC_ACCOUNT_POSTGRES_PASSWORD}
+      TEMP_DIR: ${TEMP_DIR}
+      UPLOAD_MAX_FILESIZE_MB: ${UPLOAD_MAX_FILESIZE_MB}
+    ports:
+      - ${MIC_ACCOUNT_PORT}:${MIC_ACCOUNT_PORT}
+    volumes:
+      - ../microservices-test-volumes/sequelize-test-logs:/usr/app/log
+    links:
+      - microservices-account-service-postgres-prod
+    depends_on:
+      - microservices-account-service-postgres-prod
+    networks:
+      - app-network
+
+  microservices-nginx-prod:
+    container_name: nginx-prod
+    restart: always
+    image: nginx:1.19.1
+    ports:
+      - ${NGINX_EXTERNAL_PORT}:${NGINX_PORT}
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx_logs/:/var/log/nginx/
+    networks:
+      - app-network
+    links:
+      - microservices-account-service-prod
+    depends_on:
+      - microservices-account-service-prod
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  account-service-postgres-prod:
