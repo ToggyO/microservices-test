@@ -65,6 +65,7 @@ services:
       - ./nginx_logs/:/var/log/nginx/
     networks:
       - app-network
+      - external-network
     links:
       - microservices-account-service-prod
     depends_on:
@@ -73,6 +74,10 @@ services:
 networks:
   app-network:
     driver: bridge
+    internal: true
+  external-network:
+    driver: bridge
+
 
 volumes:
   account-service-postgres-prod:
