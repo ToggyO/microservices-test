@@ -1,1 +1,0 @@
-2020/07/17 07:08:36 [error] 27#27: *4 connect() failed (111: Connection refused) while connecting to upstream, client: 172.19.0.1, server: localhost, request: "GET /auth/swagger/v1/ HTTP/1.1", upstream: "http://127.0.0.1:3010/swagger/v1", host: "localhost:8080"
