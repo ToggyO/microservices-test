@@ -81,7 +81,7 @@ export const initializeSwagger = ({ basePath }) => {
         {
           url: isProduction
             ? `http://${config.NGINX_HOST}:${config.NGINX_PORT}`
-            : `http://${config.HOST}:${config.PORT}`,
+            : `http://${config.MIC_ACCOUNT_HOST}:${config.MIC_ACCOUNT_PORT}`,
           description: `${isProduction ? 'Production' : 'Local'} server`,
         },
       ],

@@ -1,14 +1,14 @@
 /**
  * Описание: файл для импорта конфигурации приложения из .env.development файлов
  */
-import fs from 'fs';
-import path from 'path';
-import dotenv from 'dotenv';
+// import fs from 'fs';
+// import path from 'path';
+// import dotenv from 'dotenv';
 
 import allowedEnvList from '../../env_list';
-const { env } = process;
-const cloneEnv = { ...env };
-
+// const { env } = process;
+// const cloneEnv = { ...env };
+//
 // const envDir = path.join(
 //   process.cwd(),
 //   'env_list',

@@ -3,6 +3,7 @@
  */
 import path from 'path';
 import bodyParser from 'body-parser';
+// import cookieParser from 'cookie-parser';
 
 import logger from '@utils/logger';
 import config from '@config';
@@ -58,11 +59,14 @@ export const run = ({ app }) => {
   // подключение логирования к приложению
   app.set('log', log);
   // Отключение заголовка x-powered-by
-  app.disable('x-powered-by');
+  // app.disable('x-powered-by');
   // Парсинг данных запроса
   app.use(bodyParser.json({ limit: '1mb' }));
+  // TODO: изучить
+  // app.use(cookieParser());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+  // FIXME: если не будет вьюх, то удалить
   // Указание двжка представлений
   const viewsPath = path.join(__dirname, '/views');
   app.set('view engine', 'hbs');
