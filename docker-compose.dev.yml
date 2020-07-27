@@ -4,7 +4,8 @@ services:
     container_name: account-service-postgres-dev
     image: postgres:12.1
     restart: always
-    env_file: .env.development
+    env_file:
+      - ./.env.development
     environment:
       POSTGRES_USER: ${MIC_ACCOUNT_POSTGRES_USER}
       POSTGRES_PASSWORD: ${MIC_ACCOUNT_POSTGRES_PASSWORD}

@@ -26,4 +26,4 @@ build
 npm-debug.log
 .tmp
 log
-/nginx_logs/
+/nginx_logs
