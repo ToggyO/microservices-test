@@ -16,8 +16,8 @@ services:
       - app-network
 
   microservices-account-service-prod:
-    container_name: auth-service-prod
-    build: ./auth-service
+    container_name: account-service-prod
+    build: ./account-service
     restart: always
     environment:
       NODE_ENV: ${NODE_ENV}
@@ -35,7 +35,7 @@ services:
       JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
       PEPPER: ${PEPPER}
       MIC_ACCOUNT_ROUTE_PREFIX: ${MIC_ACCOUNT_ROUTE_PREFIX}
-      MIC_ACCOUNT_POSTGRES_HOST: ${MIC_ACCOUNT_POSTGRES_HOST}
+      MIC_ACCOUNT_POSTGRES_HOST: ${MIC_ACsequelizeCOUNT_POSTGRES_HOST}
       MIC_ACCOUNT_POSTGRES_PORT: ${MIC_ACCOUNT_POSTGRES_PORT}
       MIC_ACCOUNT_POSTGRES_EXTERNAL_PORT: ${MIC_ACCOUNT_POSTGRES_EXTERNAL_PORT}
       MIC_ACCOUNT_POSTGRES_USER: ${MIC_ACCOUNT_POSTGRES_USER}
@@ -77,7 +77,6 @@ networks:
     internal: true
   external-network:
     driver: bridge
-
 
 volumes:
   account-service-postgres-prod:
