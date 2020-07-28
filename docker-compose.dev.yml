@@ -15,5 +15,20 @@ services:
     ports:
       - ${MIC_ACCOUNT_POSTGRES_EXTERNAL_PORT}:${MIC_ACCOUNT_POSTGRES_PORT}
 
+  microservices-files-service-mongo-dev:
+    container_name: file-service-mongo-dev
+    image: mongo:latest
+    restart: always
+    env_file:
+      - ./.env.development
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MIC_FILES_MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MIC_FILES_MONGO_PASSWORD}
+    volumes:
+      - 'file-service-mongo-dev:/data/db'
+    ports:
+      - ${MIC_FILES_MONGO_PORT}:27017
+
 volumes:
   account-service-postgres-dev:
+  file-service-mongo-dev:

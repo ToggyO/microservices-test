@@ -72,7 +72,7 @@ export const initializeSwagger = ({ basePath }) => {
     swaggerDefinition: {
       openapi: '3.0.0',
       info: {
-        title: 'Sequelize test API',
+        title: 'Microservices-test account service API',
         version: '1.0',
         description: 'API Documentation',
       },

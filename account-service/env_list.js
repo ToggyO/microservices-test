@@ -4,7 +4,7 @@ export default [
   'NGINX_PORT',
   'MIC_ACCOUNT_HOST',
   'MIC_ACCOUNT_PORT',
-  'API_VERSION',
+  'MIC_ACCOUNT_API_VERSION',
   'AUTHORIZATION_HEADER',
   'CRON_CHECK_INVALID_TOKENS_DELAY_SECS',
   'CRYPTO_SECRET',
@@ -22,16 +22,4 @@ export default [
   'MIC_ACCOUNT_POSTGRES_PASSWORD',
   'TEMP_DIR',
   'UPLOAD_MAX_FILESIZE_MB',
-]
-
-// location /auth/swagger/v1/ {
-//   access_log   /var/log/nginx/swagger_acces.log;
-// error_log /var/log/nginx/swagger_error.log;
-// proxy_pass http://microservices-auth-service-dev:3010/swagger/v1;
-//   }
-//
-// location /auth {
-//   access_log   /var/log/nginx/auth_acces.log;
-//   error_log /var/log/nginx/auth_error.log;
-//   proxy_pass http://microservices-auth-service-dev:3010;
-//     }
+];

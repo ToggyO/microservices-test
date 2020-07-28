@@ -20,14 +20,12 @@ export const init = (async () => {
     process.exit(1);
   }
 
-  const { MIC_ACCOUNT_PORT, MIC_ACCOUNT_HOST, NODE_ENV } = config;
+  const { NODE_ENV, MIC_FILES_HOST, MIC_FILES_PORT } = config;
 
-  app.listen({ port: MIC_ACCOUNT_PORT, host: MIC_ACCOUNT_HOST }, () => {
-    app.get('log').info(`Server running at http://${MIC_ACCOUNT_HOST}:${MIC_ACCOUNT_PORT}, in ${NODE_ENV} mode. `
-			+ `Swagger: http://${MIC_ACCOUNT_HOST}:${MIC_ACCOUNT_PORT}${config.API_URL_PREFIX}`);
-  });
+  app.listen({ port: MIC_FILES_PORT, host: MIC_FILES_HOST }, () => {
+    app.get('log').info(`Server running at http://${MIC_FILES_HOST}:${MIC_FILES_PORT}, in ${NODE_ENV} mode. `
+      + `Swagger: http://${MIC_FILES_HOST}:${MIC_FILES_PORT}${config.API_URL_PREFIX}`);
+  })
 
   return app;
 })();
-
-// "indent": [1, "tab"],
