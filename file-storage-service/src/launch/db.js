@@ -11,14 +11,14 @@ import { db } from '../db';
  */
 export const run = async ({ app }) => {
   const log = app.get('log');
-  try {
+  // try {
     await db.init(
       config.MIC_FILES_MONGO_HOST,
       config.MIC_FILES_MONGO_PORT,
       config.MIC_FILES_MONGO_USERNAME,
       config.MIC_FILES_MONGO_PASSWORD,
       config.MIC_FILES_MONGO_DATABASE,
-      {}
+      {},
     );
     // await db.init(
     //   config.MIC_FILES_MONGO_HOST,
@@ -29,7 +29,7 @@ export const run = async ({ app }) => {
     //     dbName: config.MIC_FILES_MONGO_DATABASE,
     //   },
     // );
-
+  console.log('start')
     const connection = db.getMongooseConnection();
     connection.once('open', () => {
       console.log(`Соединено с базой данных ${connection.host}:${connection.port}/${connection.name}`);
@@ -39,11 +39,9 @@ export const run = async ({ app }) => {
 
     // привязать экземпляр DB
     app.set('db', db);
-  } catch (error) {
-    console.log('error');
-    console.info('Ошибка соединения с базой данной: ', error);
-  }
-
-
-
+  console.log('end')
+  // } catch (error) {
+  //   console.log('error block');
+  //   console.info('Ошибка соединения с базой данной: ', error);
+  // }
 };
