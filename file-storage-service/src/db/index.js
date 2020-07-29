@@ -30,23 +30,13 @@ class Connector {
    * @param {object} dbOptions
    * @returns {Promise<void>}
    */
-  async init(dbHost, dbPort, dbUser, dbPassword, dbName, dbOptions = {}) {
-    console.log(dbOptions);
-    console.log({ ...this.defaultOptions, ...dbOptions });
-    console.log(`mongodb://${dbUser}:${dbPassword}@${dbHost}:${dbPort}/${dbName}`)
-    this.#connection = mongoose.connection;
-    return mongoose.connect(
-      `mongodb://${dbUser}:${dbPassword}@${dbHost}:${dbPort}/${dbName}`,
+  async init(dbHost, dbPort, dbOptions = {}) {
+    await mongoose.connect(
+      `mongodb://${dbHost}:${dbPort}/admin`,
       { ...this.defaultOptions, ...dbOptions },
     );
+    this.#connection = mongoose.connection;
   }
-  // init(dbHost, dbPort, dbOptions = {}) {)
-  //   mongoose.connect(
-  //     `mongodb://${dbHost}:${dbPort}/admin`,
-  //     { ...this.defaultOptions, ...dbOptions },
-  //   );
-  //   this.#connection = mongoose.connection;
-  // }
 
   /**
    * Геттер экземпляра connection

@@ -10,38 +10,22 @@ import { db } from '../db';
  * @returns {Promise<void>}
  */
 export const run = async ({ app }) => {
-  const log = app.get('log');
-  // try {
+  try {
     await db.init(
       config.MIC_FILES_MONGO_HOST,
       config.MIC_FILES_MONGO_PORT,
-      config.MIC_FILES_MONGO_USERNAME,
-      config.MIC_FILES_MONGO_PASSWORD,
-      config.MIC_FILES_MONGO_DATABASE,
-      {},
+      {
+        user: config.MIC_FILES_MONGO_USERNAME,
+        pass: config.MIC_FILES_MONGO_PASSWORD,
+        dbName: config.MIC_FILES_MONGO_DATABASE,
+      },
     );
-    // await db.init(
-    //   config.MIC_FILES_MONGO_HOST,
-    //   config.MIC_FILES_MONGO_PORT,
-    //   {
-    //     user: config.MIC_FILES_MONGO_USERNAME,
-    //     pass: config.MIC_FILES_MONGO_PASSWORD,
-    //     dbName: config.MIC_FILES_MONGO_DATABASE,
-    //   },
-    // );
-  console.log('start')
     const connection = db.getMongooseConnection();
-    connection.once('open', () => {
-      console.log(`Соединено с базой данных ${connection.host}:${connection.port}/${connection.name}`);
-    })
-    connection.on('close', () => console.log('Соединение с базой данных успешно закрыто.'));
-    connection.on('error', error => log.error(error));
+    console.log(`Успешное соединение с базой данных ${connection.host}:${connection.port}/${connection.name}`);
 
     // привязать экземпляр DB
     app.set('db', db);
-  console.log('end')
-  // } catch (error) {
-  //   console.log('error block');
-  //   console.info('Ошибка соединения с базой данной: ', error);
-  // }
+  } catch (error) {
+    console.info('Ошибка соединения с базой данных! ', error);
+  }
 };

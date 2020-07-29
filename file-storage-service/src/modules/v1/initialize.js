@@ -6,7 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
 import config from 'config';
-import { ERROR_CODES } from 'constants';
+// import { ERROR_CODES } from 'constants';
 // инициализаторы роутинга
 
 // инициализаторы моделей
@@ -21,6 +21,7 @@ export const createV1Router = () => {
   return router;
 };
 
+// FIXME: вероятно, не нужно
 /**
  * Инициализация моделей
  * @param app
@@ -47,7 +48,7 @@ export const initializeModels = ({ app }) => {
  */
 export const initializeSwagger = ({ basePath }) => {
   const {
-    isProduction
+    isProduction,
   } = config;
 
   const modulesSwaggerSchemes = {
@@ -60,7 +61,7 @@ export const initializeSwagger = ({ basePath }) => {
     swaggerDefinition: {
       openapi: '3.0.0',
       info: {
-        title: 'Microservices-test account service API',
+        title: 'Microservices-test files service API',
         version: '1.0',
         description: 'API Documentation',
       },
