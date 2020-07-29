@@ -24,7 +24,7 @@ export const run = async ({ app }) => {
     console.log(`Успешное соединение с базой данных ${connection.host}:${connection.port}/${connection.name}`);
 
     // привязать экземпляр DB
-    app.set('db', db);
+    app.set('db', connection);
   } catch (error) {
     console.info('Ошибка соединения с базой данных! ', error);
   }
