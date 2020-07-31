@@ -10,6 +10,7 @@ import config from 'config';
 // инициализаторы роутинга
 
 // инициализаторы моделей
+import { initializeModel as initializeFileModel } from './files/files.model';
 
 /**
  * Инициализация роутинга
