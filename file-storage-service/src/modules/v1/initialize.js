@@ -8,9 +8,8 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import config from 'config';
 // import { ERROR_CODES } from 'constants';
 // инициализаторы роутинга
-
+import { CreateRouter as CreateFilesRouter } from './files/files.router';
 // инициализаторы моделей
-import { initializeModel as initializeFileModel } from './files/files.model';
 
 /**
  * Инициализация роутинга
@@ -19,35 +18,16 @@ import { initializeModel as initializeFileModel } from './files/files.model';
 export const createV1Router = () => {
   const router = Router();
 
+  router.use('/', new CreateFilesRouter().initRoutes());
+
   return router;
-};
-
-// FIXME: вероятно, не нужно
-/**
- * Инициализация моделей
- * @param app
- * @returns {void}
- */
-export const initializeModels = ({ app }) => {
-  const models = {};
-
-  Object.keys(models).forEach(modelKey => {
-    // Обратный вызов модели на событии полной готовности всех доступных моделей
-    try {
-      if (typeof models[modelKey].onAllModelsInitialized === 'function') {
-        models[modelKey].onAllModelsInitialized(models);
-      }
-    } catch (error) {
-      app.get('log').error(error);
-    }
-  });
 };
 
 /**
  * Инициализация сваггера
  * @param {string} basePath
  */
-export const initializeSwagger = ({ basePath }) => {
+export const initializeSwagger = ({ basePath = '' }) => {
   const {
     isProduction,
   } = config;
@@ -70,8 +50,8 @@ export const initializeSwagger = ({ basePath }) => {
       servers: [
         {
           url: isProduction
-            ? `http://${config.NGINX_HOST}:${config.NGINX_PORT}`
-            : `http://${config.MIC_FILES_HOST}:${config.MIC_FILES_PORT}`,
+            ? `http://${config.NGINX_HOST}:${config.NGINX_PORT}${basePath}`
+            : `http://${config.MIC_FILES_HOST}:${config.MIC_FILES_PORT}${basePath}`,
           description: `${isProduction ? 'Production' : 'Local'} server`,
         },
       ],

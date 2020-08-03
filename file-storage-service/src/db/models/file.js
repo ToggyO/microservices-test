@@ -13,7 +13,11 @@ const schema = new Schema(
       type: String,
       required: true,
     },
-    path: {
+    pathToFile: {
+      type: String,
+      required: true,
+    },
+    mimeType: {
       type: String,
       required: true,
     },

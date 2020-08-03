@@ -1,16 +1,22 @@
 /**
  * Описание: Класс для работы с базой данных с общими системными методами
  */
-import mongoose from 'mongoose';
+import { connect, connection } from 'mongoose';
+
+import { FileModel } from 'modules/v1/files/files.model';
 
 class Connector {
   #connection = null;
+
+  #modelsList = {};
+
+  #models = {};
 
   defaultOptions = {
     useNewUrlParser: true,
     useFindAndModify: false,
     useCreateIndex: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   };
 
   /**
@@ -21,6 +27,10 @@ class Connector {
     Object.keys(props).forEach((propName) => {
       this[`_${propName}`] = props[propName];
     });
+
+    this.#modelsList = {
+      FileModel,
+    };
   }
 
   /**
@@ -31,18 +41,41 @@ class Connector {
    * @returns {Promise<void>}
    */
   async init(dbHost, dbPort, dbOptions = {}) {
-    await mongoose.connect(
+    await connect(
       `mongodb://${dbHost}:${dbPort}/admin`,
       { ...this.defaultOptions, ...dbOptions },
     );
-    this.#connection = mongoose.connection;
+    this.#connection = connection;
+    this.#initModels();
+  }
+
+  /**
+   * Инициализация моделей
+   * @returns {void}
+   */
+  #initModels = () => {
+    const { Connection } = this;
+    Object.entries(this.#modelsList).forEach(([key, Model]) => {
+      this.#models = {
+        ...this.#models,
+        [key]: new Model({ connection: Connection }).model,
+      };
+    });
+  }
+
+  /**
+   * Геттер доступных моделей экземпляра
+   * @returns {object}
+   */
+  get Models() {
+    return this.#models;
   }
 
   /**
    * Геттер экземпляра connection
    * @returns {object}
    */
-  getMongooseConnection() {
+  get Connection() {
     return this.#connection;
   }
 }

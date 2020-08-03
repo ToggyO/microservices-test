@@ -9,7 +9,7 @@ import { db } from '../db';
  * @param { object } app - экземпляр приложения
  * @returns {Promise<void>}
  */
-export const run = async ({ app }) => {
+export const run = async ({ app } = {}) => {
   try {
     await db.init(
       config.MIC_FILES_MONGO_HOST,
@@ -20,11 +20,11 @@ export const run = async ({ app }) => {
         dbName: config.MIC_FILES_MONGO_DATABASE,
       },
     );
-    const connection = db.getMongooseConnection();
+    const connection = db.Connection;
     console.log(`Успешное соединение с базой данных ${connection.host}:${connection.port}/${connection.name}`);
 
     // привязать экземпляр DB
-    app.set('db', connection);
+    app.set('db', db);
   } catch (error) {
     console.info('Ошибка соединения с базой данных! ', error);
   }

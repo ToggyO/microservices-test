@@ -1,17 +1,22 @@
 /**
  * Описание: Слой для работы с коллекцией файлов в базе данных
  */
-import { db } from 'db';
-import schema from 'db/models/file';
+import fileSchema from 'db/models/file';
 
-export const FileModel = {};
+export class FileModel {
+  #model = null;
 
-const mongooseInstance = db.getMongooseConnection();
+  #connection = null;
 
-FileModel.initializeModel = () => mongooseInstance.model('Files', schema);
+  constructor({ connection }) {
+    const schema = fileSchema;
 
-export const initializeModel = () => {
-  FileModel.init();
+    this.#connection = connection;
 
-  return FileModel;
-};
+    this.#model = this.#connection.model('Files', schema);
+  }
+
+  get model() {
+    return this.#model;
+  }
+}

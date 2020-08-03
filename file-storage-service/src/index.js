@@ -17,7 +17,6 @@ export const init = (async () => {
     await launch({ app });
   } catch (error) {
     console.log(error);
-    console.log('init catch block');
     process.exit(1);
   }
 
