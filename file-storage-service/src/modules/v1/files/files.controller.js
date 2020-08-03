@@ -5,10 +5,10 @@ import path from 'path';
 import fs from 'fs';
 
 import config from 'config';
-import { ERROR_CODES } from 'constants';
+import { POSSIBLE_CODES } from 'constants';
 import { getProp } from 'utils/helpers';
-import { FileService } from './files.service';
 import { ApplicationError } from 'utils/response';
+import { FileService } from './files.service';
 import { FILES_ERROR_MESSAGES } from './contansts';
 
 export const FileController = {};
@@ -68,12 +68,13 @@ FileController.saveFile = async (req, res, next) => {
 
     if (!files || !Object.keys(files).length) {
       throw new ApplicationError({
-        statusCode: 400,
+        statusCode: 422,
         errorMessage: FILES_ERROR_MESSAGES.NO_FILES,
-        errorCode: ERROR_CODES.validation,
+        errorCode: POSSIBLE_CODES.unprocessable_entity,
         errors: [],
-      })
+      });
     }
+
 
   } catch (error) {
     next(error);
