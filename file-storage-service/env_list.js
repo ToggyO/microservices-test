@@ -1,4 +1,5 @@
 export default [
+  'CRYPTO_SECRET',
   'NODE_ENV',
   'NGINX_HOST',
   'NGINX_PORT',
@@ -11,4 +12,6 @@ export default [
   'MIC_FILES_MONGO_USERNAME',
   'MIC_FILES_MONGO_PASSWORD',
   'MIC_FILES_MONGO_DATABASE',
-]
+  'UPLOAD_MAX_FILESIZE_MB',
+  'UPLOAD_MAX_FILES_COUNT',
+];

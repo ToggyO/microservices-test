@@ -14,10 +14,14 @@ export const FileService = {};
  * @param {object} options
  * @returns {Promise<object>}
  */
-FileService.getFile = async ({
+FileService.getFileData = async ({
   conditions = {},
   projection = {},
   options = {},
 }) => (
   Models.FileModel.findOne(conditions, projection, options)
 );
+
+FileService.saveFileData = async ({ values }) => {
+
+};

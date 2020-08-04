@@ -5,11 +5,12 @@ import path from 'path';
 import fs from 'fs';
 
 import config from 'config';
-import { POSSIBLE_CODES } from 'constants';
+import { UNPROCESSABLE_ENTITY } from 'constants';
 import { getProp } from 'utils/helpers';
 import { ApplicationError } from 'utils/response';
 import { FileService } from './files.service';
 import { FILES_ERROR_MESSAGES } from './contansts';
+import { getSuccessRes } from '../../../utils/response';
 
 export const FileController = {};
 
@@ -29,7 +30,7 @@ FileController.getFile = async (req, res, next) => {
       res.status(404).end();
     }
 
-    const { pathToFile, mimeType } = await FileService.getFile({ conditions: { hash } });
+    const { pathToFile, mimeType } = await FileService.getFileData({ conditions: { hash } });
 
     if (!pathToFile || !mimeType) {
       return res.status(404).end();
@@ -64,18 +65,20 @@ FileController.getFile = async (req, res, next) => {
  */
 FileController.saveFile = async (req, res, next) => {
   try {
-    const files = getProp('files', req, null);
+    const files = getProp(req, 'files', null);
 
     if (!files || !Object.keys(files).length) {
       throw new ApplicationError({
         statusCode: 422,
         errorMessage: FILES_ERROR_MESSAGES.NO_FILES,
-        errorCode: POSSIBLE_CODES.unprocessable_entity,
+        errorCode: UNPROCESSABLE_ENTITY,
         errors: [],
       });
     }
 
+    const resultData = FileService.saveFileData();
 
+    res.status(201).send(getSuccessRes({ resultData }));
   } catch (error) {
     next(error);
   }

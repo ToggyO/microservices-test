@@ -1,7 +1,7 @@
 /**
  * Описание: Файл содержит глобальный конструктор ошибки при обработке запроса
  */
-import { INTERNAL_ERROR, ERROR_CODES } from '@constants';
+import { INTERNAL_ERROR, ERROR_CODES } from 'constants';
 
 class ApplicationError extends Error {
   constructor({

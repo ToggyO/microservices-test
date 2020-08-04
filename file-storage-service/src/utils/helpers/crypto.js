@@ -34,28 +34,4 @@ export class customCrypto {
 	  decrypted += decipher.final('utf8');
 	  return decrypted;
 	};
-
-  /**
-   * Захешировать пароль
-   * @param {string} password - пароль
-   * @returns {string[]} - соль и хэш
-   */
-  static hashPassword = password => {
-  	const salt = crypto.randomBytes(32).toString('hex');
-  	const saltWithPepper = this.encrypt(salt);
-  	const passwordHash = crypto.pbkdf2Sync(password, saltWithPepper, 2048, 124, 'sha512').toString('hex');
-  	return { salt: saltWithPepper, passwordHash };
-  }
-
-	/**
-   * Сравнить пароль с захешированным паролем
-   * @param {string} password - пароль
-   * @param {string} passwordHash - хэш пароля
-   * @param {string} saltWithPepper - соль
-   * @returns {boolean} - эквивалентность пароля и захешированного пароля
-   */
-	static verifyPassword = (password, passwordHash, saltWithPepper) => {
-	  const hash = crypto.pbkdf2Sync(password, saltWithPepper, 2048, 124, 'sha512').toString('hex');
-	  return passwordHash === hash;
-	};
 }

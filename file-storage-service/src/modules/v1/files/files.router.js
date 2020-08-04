@@ -18,7 +18,7 @@ export class CreateRouter {
     const { router } = this;
 
     /**
-     * Get list of users
+     * Get file by hash
      * @swagger
      * path:
      *  /files/{hash}:
@@ -44,17 +44,26 @@ export class CreateRouter {
     router.get('/', asyncWrapper(FileController.getFile));
 
     /**
-     * Get list of users
+     * Save file
      * @swagger
-     * post:
+     * path:
      *  /files:
-     *      post:
+     *     post:
      *        tags:
      *          - Files
      *        description: Save file
      *        summary: Save file
      *        produces:
      *          - application/json
+     *        requestBody:
+     *          content:
+     *            multipart/form-data:
+     *              schema:
+     *                type: object
+     *                properties:
+     *                  files:
+     *                    type: string
+     *                    format: binary
      *        responses:
      *          200:
      *            description: Successful operation
