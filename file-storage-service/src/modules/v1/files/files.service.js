@@ -23,5 +23,5 @@ FileService.getFileData = async ({
 );
 
 FileService.saveFileData = async ({ values }) => {
-
+  await Models.FileModel.insertMany();
 };
