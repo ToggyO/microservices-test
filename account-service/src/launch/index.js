@@ -1,3 +1,7 @@
+/**
+ * Описание: Конфигурация приложения и поключение к внешним зависимостям
+ */
+import { init as initAxios } from '@utils/network/axiosClient';
 import * as common from './common';
 import * as db from './db';
 import * as modules from './modules';
@@ -13,6 +17,7 @@ export default async ({ app }) => {
   common.run({ app });
   await db.run({ app });
   modules.run({ app });
+  initAxios({ app });
   await deferredTasks.run({ app });
   errorHandler.run({ app });
 };

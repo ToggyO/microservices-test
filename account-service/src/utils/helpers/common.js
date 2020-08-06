@@ -40,3 +40,16 @@ export function getProp(object = {}, keys, defaultVal) {
   }
   return object === undefined ? defaultVal : object;
 }
+
+/**
+ * Отделение расширения файла от имени
+ * @param {string} filename - объект
+ * @returns {[string, string]}
+ *    первый элемент - имя файла
+ *    первый элемент - расширение файла
+ */
+export function getFileExtension(filename) {
+  const fileName = filename.replace(/\.[^/.]+$/, '');
+  const ext = filename.split('.').pop();
+  return [fileName, ext];
+}

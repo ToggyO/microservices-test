@@ -3,14 +3,13 @@
  */
 import { Router } from 'express';
 
-import { asyncWrapper } from '@utils/helpers';
+import { asyncWrapper, upload } from '@utils/helpers';
 import { authenticate } from 'utils/authentication';
 import { ProfileController } from './profile.controller';
 
 /**
  * Роутер: Profile
  */
-
 export const createRouter = () => {
   const router = Router();
 
@@ -115,6 +114,47 @@ export const createRouter = () => {
    *                  $ref: '#/components/schemas/forbiddenResponse'
    */
   router.put('/me', asyncWrapper(authenticate(null)), asyncWrapper(ProfileController.updateCurrentUserProfile));
+
+  /**
+   * Upload user's avatar
+   * @swagger
+   * path:
+   *  /account/profile/avatar:
+   *      post:
+   *        tags:
+   *          - Profile
+   *        description: Upload user's avatar
+   *        summary: Upload user's avatar
+   *        requestBody:
+   *          content:
+   *            multipart/form-data:
+   *              schema:
+   *                type: object
+   *                properties:
+   *                  files:
+   *                    type: string
+   *                    format: binary
+   *        responses:
+   *          200:
+   *            description: Successful operation
+   *            content:
+   *              application/json:
+   *                schema:
+   *                  type: object
+   *                  properties:
+   *                    errorCode:
+   *                      type: number
+   *                      example: 0
+   *                    resultData:
+   *                      type: object
+   */
+  router.post(
+    '/avatar',
+    // asyncWrapper(authenticate(null)),
+    upload.array('files', 8),
+    // upload.single('file'),
+    asyncWrapper(ProfileController.uploadAvatar),
+  );
 
   return router;
 };

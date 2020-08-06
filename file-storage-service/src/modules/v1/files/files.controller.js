@@ -2,15 +2,14 @@
  * Описание: Файл содержит контроллер для обработки роутинга модуля работы с файлами
  */
 import path from 'path';
-import fs from 'fs';
+import { promises as fs } from 'fs';
 
 import config from 'config';
 import { UNPROCESSABLE_ENTITY } from 'constants';
 import { getProp } from 'utils/helpers';
-import { ApplicationError } from 'utils/response';
+import { ApplicationError, getSuccessRes } from 'utils/response';
 import { FileService } from './files.service';
 import { FILES_ERROR_MESSAGES } from './contansts';
-import { getSuccessRes } from '../../../utils/response';
 
 export const FileController = {};
 
@@ -65,7 +64,7 @@ FileController.getFile = async (req, res, next) => {
  */
 FileController.saveFile = async (req, res, next) => {
   try {
-    const files = getProp(req, 'files', null);
+    const files = getProp(req.body, 'files', null);
 
     if (!files || !Object.keys(files).length) {
       throw new ApplicationError({
@@ -76,9 +75,15 @@ FileController.saveFile = async (req, res, next) => {
       });
     }
 
-    const resultData = FileService.saveFileData();
+    // const resultData = FileService.saveFileData();
+    await Promise.all(
+      files.map(async item => {
+        const string = Buffer.from(item.buffer.data);
+        await fs.writeFile(`.${config.TEMP_DIR}${item.originalname}`, string, { encoding: 'utf8' });
+      }),
+    );
 
-    res.status(201).send(getSuccessRes({ resultData }));
+    res.status(201).send(getSuccessRes({}));
   } catch (error) {
     next(error);
   }

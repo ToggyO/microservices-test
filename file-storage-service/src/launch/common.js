@@ -52,7 +52,7 @@ export const run = ({ app }) => {
   // подключение логирования к приложению
   app.set('log', log);
   // Парсинг данных запроса
-  app.use(bodyParser.json({ limit: '1mb' }));
+  app.use(bodyParser.json({ limit: '50mb' }));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   // Обработка глобальных необработанных ошибок
