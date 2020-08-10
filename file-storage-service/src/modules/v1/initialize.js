@@ -6,7 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
 import config from 'config';
-// import { ERROR_CODES } from 'constants';
+import { getAppBaseUrl } from 'utils/helpers';
 // инициализаторы роутинга
 import { CreateRouter as CreateFilesRouter } from './files/files.router';
 // инициализаторы моделей
@@ -49,9 +49,10 @@ export const initializeSwagger = ({ basePath = '' }) => {
       basePath,
       servers: [
         {
-          url: isProduction
-            ? `http://${config.NGINX_HOST}:${config.NGINX_PORT}${basePath}`
-            : `http://${config.MIC_FILES_HOST}:${config.MIC_FILES_PORT}${basePath}`,
+          // url: isProduction
+          //   ? `http://${config.NGINX_HOST}:${config.NGINX_PORT}${basePath}`
+          //   : `http://${config.MIC_FILES_HOST}:${config.MIC_FILES_PORT}${basePath}`,
+          url: getAppBaseUrl(),
           description: `${isProduction ? 'Production' : 'Local'} server`,
         },
       ],

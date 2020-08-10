@@ -21,7 +21,7 @@ export class CreateRouter {
      * Get file by hash
      * @swagger
      * path:
-     *  /files/{hash}:
+     *  /files/source/{ownerType}/{hash}:
      *      get:
      *        tags:
      *          - Files
@@ -41,7 +41,7 @@ export class CreateRouter {
      *                    resultData:
      *                      type: object
      */
-    router.get('/', asyncWrapper(FileController.getFile));
+    router.get('/source/:ownerType/:hash', asyncWrapper(FileController.getFile));
 
     /**
      * Save file

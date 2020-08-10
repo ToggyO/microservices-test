@@ -3,7 +3,7 @@
  */
 import { getProp } from '@utils/helpers';
 import { ApplicationError, getSuccessRes } from '@utils/response';
-import { ERROR_CODES, UNPROCESSABLE_ENTITY } from '@constants';
+import { ERROR_CODES } from '@constants';
 import { USER_ERROR_MESSAGES } from '../user/constants';
 import { UserController } from '../user/user.controller';
 import { UserService } from '../user/user.service';
@@ -71,9 +71,9 @@ ProfileController.updateCurrentUserProfile = async (req, res, next) => {
  */
 ProfileController.uploadAvatar = async (req, res, next) => {
   try {
-    const avatar = getProp(req, 'files', null);
+    const avatar = getProp(req, 'file', null);
 
-    // if (!files || !Object.keys(files).length) {
+    // if (!avatar || !Object.keys(avatar).length) {
     //   throw new ApplicationError({
     //     statusCode: 422,
     //     errorMessage: FILES_ERROR_MESSAGES.NO_FILES,
@@ -82,7 +82,7 @@ ProfileController.uploadAvatar = async (req, res, next) => {
     //   });
     // }
 
-    const resultData = ProfileService.uploadAvatar({ avatar });
+    const resultData = await ProfileService.uploadAvatar({ avatar });
 
     res.status(201).send(getSuccessRes({ resultData }));
   } catch (error) {

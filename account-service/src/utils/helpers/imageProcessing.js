@@ -6,30 +6,52 @@ import sharp from 'sharp';
 
 import { getFileExtension } from './common';
 
-export const imageProcessing = async (image) => {
+/**
+ * Инициализация базового обработчика ошибок, возникающих при пользовательских запросах
+ * @param {object} image - экземпляр приложения
+ * @returns {void}
+ */
+const imageProcessing = async image => {
+  const clonedImage = { ...image };
+
+  const resized = await sharp(clonedImage.buffer)
+    .resize({
+      width: 360,
+      fit: sharp.fit.inside,
+      withoutEnlargement: true,
+    })
+    .toBuffer();
+
+  const [fileName, fileExt] = getFileExtension(image.originalname);
+
+  clonedImage.originalname = `${fileName}_360.${fileExt}`;
+  clonedImage.buffer = resized;
+  clonedImage.size = resized.length;
+
+  return clonedImage;
+};
+
+
+export const getResizedImage = async assets => {
   const withResizedImages = [];
-  await Promise.all(
-    image.map(async currImage => {
-      const clonedImage = { ...currImage };
 
-      const resized = await sharp(clonedImage.buffer)
-        .resize({
-          width: 360,
-          fit: sharp.fit.inside,
-          withoutEnlargement: true,
-        })
-        .toBuffer();
+  if (Array.isArray(assets)) {
+    await Promise.all(
+      assets.map(async currImage => {
+        const clonedImage = await imageProcessing(currImage);
 
-      const [fileName, fileExt] = getFileExtension(currImage.originalname);
+        withResizedImages.push(currImage);
+        withResizedImages.push(clonedImage);
+      }),
+    );
 
-      clonedImage.originalname = `${fileName}_360.${fileExt}`;
-      clonedImage.buffer = resized;
-      clonedImage.size = resized.length;
+    return withResizedImages;
+  }
 
-      withResizedImages.push(currImage);
-      withResizedImages.push(clonedImage);
-    }),
-  );
+  const clonedImage = await imageProcessing(assets);
+
+  withResizedImages.push(assets);
+  withResizedImages.push(clonedImage);
 
   return withResizedImages;
 };

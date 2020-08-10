@@ -3,4 +3,4 @@ export * from './common';
 export * from './crypto';
 export * from './basicService';
 export { upload } from './fileUploadMiddleware';
-export { imageProcessing } from './imageProcessing';
+export { getResizedImage } from './imageProcessing';

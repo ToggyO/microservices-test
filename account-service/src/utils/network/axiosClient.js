@@ -51,6 +51,7 @@ class AxiosClient {
       response => response,
       error => {
         const originalRequest = error.config;
+        const errorData = error.response;
         const useCustomErrorMessageHandling = getProp(error, 'config.useCustomErrorMessageHandling');
 
         if (typeof useCustomErrorMessageHandling === 'function') {
@@ -65,7 +66,7 @@ class AxiosClient {
         }
 
         if (typeof originalRequest._retryAttempts !== 'number' || originalRequest._retryAttempts >= maxRetryAttempts) {
-          return error;
+          return errorData;
         }
 
         return new Promise(resolve => {

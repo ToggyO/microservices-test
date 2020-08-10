@@ -2,9 +2,8 @@
  * Описание: Файл содержит контроллер для обработки роутинга модуля работы с файлами
  */
 import path from 'path';
-import { promises as fs } from 'fs';
+import fs from 'fs';
 
-import config from 'config';
 import { UNPROCESSABLE_ENTITY } from 'constants';
 import { getProp } from 'utils/helpers';
 import { ApplicationError, getSuccessRes } from 'utils/response';
@@ -12,8 +11,6 @@ import { FileService } from './files.service';
 import { FILES_ERROR_MESSAGES } from './contansts';
 
 export const FileController = {};
-
-// const
 
 /**
  * Получить файл по ссылке
@@ -24,12 +21,13 @@ export const FileController = {};
  */
 FileController.getFile = async (req, res, next) => {
   try {
-    const hash = getProp('hash', req.params, null);
-    if (!hash) {
+    const hash = getProp(req.params, 'hash', null);
+    const ownerType = getProp(req.ownerType, 'hash', null);
+    if (!hash || !ownerType) {
       res.status(404).end();
     }
 
-    const { pathToFile, mimeType } = await FileService.getFileData({ conditions: { hash } });
+    const { pathToFile, mimeType } = await FileService.getFileData({ conditions: { hash, ownerType } });
 
     if (!pathToFile || !mimeType) {
       return res.status(404).end();
@@ -65,6 +63,7 @@ FileController.getFile = async (req, res, next) => {
 FileController.saveFile = async (req, res, next) => {
   try {
     const files = getProp(req.body, 'files', null);
+    const ownerType = getProp(req.body, 'ownerType', null);
 
     if (!files || !Object.keys(files).length) {
       throw new ApplicationError({
@@ -75,15 +74,18 @@ FileController.saveFile = async (req, res, next) => {
       });
     }
 
-    // const resultData = FileService.saveFileData();
-    await Promise.all(
-      files.map(async item => {
-        const string = Buffer.from(item.buffer.data);
-        await fs.writeFile(`.${config.TEMP_DIR}${item.originalname}`, string, { encoding: 'utf8' });
-      }),
-    );
+    if (!ownerType) {
+      throw new ApplicationError({
+        statusCode: 422,
+        errorMessage: FILES_ERROR_MESSAGES.NO_OWNER_TYPE,
+        errorCode: UNPROCESSABLE_ENTITY,
+        errors: [],
+      });
+    }
 
-    res.status(201).send(getSuccessRes({}));
+    const resultData = await FileService.saveFileData({ files, ownerType });
+
+    res.status(201).send(getSuccessRes({ resultData }));
   } catch (error) {
     next(error);
   }

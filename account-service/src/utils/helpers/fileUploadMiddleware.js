@@ -4,7 +4,8 @@
 import multer from 'multer';
 
 import config from '@config';
-import { SUPPORTED_MIME_TYPES } from '@constants';
+import { SUPPORTED_MIME_TYPES, ERROR_CODES } from '@constants';
+import { ApplicationError } from '../response';
 
 /**
  * See https://github.com/expressjs/multer
@@ -14,7 +15,12 @@ const uploadOptions = {
     const allowedFileType = SUPPORTED_MIME_TYPES[file.mimetype];
 
     if (!allowedFileType) {
-      return cb(null, false);
+      return cb(null, new ApplicationError({
+        statusCode: 400,
+        errorCode: ERROR_CODES.validation,
+        errorMessage: 'Unsupported file type',
+        errors: [],
+      }));
     }
 
     return cb(null, true);
