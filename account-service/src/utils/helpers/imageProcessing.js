@@ -8,27 +8,53 @@ import { getFileExtension } from './common';
 
 /**
  * Инициализация базового обработчика ошибок, возникающих при пользовательских запросах
- * @param {object} image - экземпляр приложения
+ * @param {object} image - картинка
+ * @param {Array<string>} sizes - разрешения, для которых необходимо создать картинки
  * @returns {void}
  */
-const imageProcessing = async image => {
+const imageProcessing = async (image, sizes = []) => {
   const clonedImage = { ...image };
+  const images = {
+    originalFile: image,
+  };
 
-  const resized = await sharp(clonedImage.buffer)
-    .resize({
-      width: 360,
-      fit: sharp.fit.inside,
-      withoutEnlargement: true,
-    })
-    .toBuffer();
+  await Promise.all(
+    sizes.map(async size => {
+      const resizedBuffer = await sharp(clonedImage.buffer)
+        .resize({
+          width: 360,
+          fit: sharp.fit.inside,
+          withoutEnlargement: true,
+        })
+        .toBuffer();
 
-  const [fileName, fileExt] = getFileExtension(image.originalname);
+      const [fileName, fileExt] = getFileExtension(image.originalname);
 
-  clonedImage.originalname = `${fileName}_360.${fileExt}`;
-  clonedImage.buffer = resized;
-  clonedImage.size = resized.length;
+      const resized = {
+        ...clonedImage,
+        originalname: `${fileName}_360.${fileExt}`,
+        buffer: resizedBuffer,
+        size: resizedBuffer.length,
+      };
 
-  return clonedImage;
+      images[size] = resized;
+    }),
+  );
+  // const resized = await sharp(clonedImage.buffer)
+  //   .resize({
+  //     width: 360,
+  //     fit: sharp.fit.inside,
+  //     withoutEnlargement: true,
+  //   })
+  //   .toBuffer();
+
+  // const [fileName, fileExt] = getFileExtension(image.originalname);
+  //
+  // clonedImage.originalname = `${fileName}_360.${fileExt}`;
+  // clonedImage.buffer = resized;
+  // clonedImage.size = resized.length;
+
+  return images;
 };
 
 
@@ -38,9 +64,9 @@ export const getResizedImage = async assets => {
   if (Array.isArray(assets)) {
     await Promise.all(
       assets.map(async currImage => {
-        const clonedImage = await imageProcessing(currImage);
+        const clonedImage = await imageProcessing(currImage, ['360']);
 
-        withResizedImages.push(currImage);
+        // withResizedImages.push(currImage);
         withResizedImages.push(clonedImage);
       }),
     );
@@ -50,7 +76,7 @@ export const getResizedImage = async assets => {
 
   const clonedImage = await imageProcessing(assets);
 
-  withResizedImages.push(assets);
+  // withResizedImages.push(assets);
   withResizedImages.push(clonedImage);
 
   return withResizedImages;

@@ -37,16 +37,25 @@ FileService.saveFileData = async ({ files, ownerType }) => {
   } catch (error) {
     await fs.mkdir(innerDirectory);
   }
-  // eslint-disable-next-line no-unused-expressions
-  // await fs.stat(innerDirectory) || await fs.mkdir(innerDirectory);
 
   await Promise.all(
     files.map(async item => {
       const { originalname, buffer, mimetype } = item;
       const hash = customCrypto.encrypt(new Date().getMilliseconds().toString());
       const file = Buffer.from(buffer.data);
-      const qualitySuffix = originalname.includes('360') ? '_360' : '';
-      const pathToFile = `${innerDirectory}${hash}${qualitySuffix}`;
+
+      let qualitySuffix;
+
+      if (mimetype.includes('image')) {
+        qualitySuffix = originalname.includes('360') ? '360' : '';
+        try {
+          await fs.stat(`${innerDirectory}/${qualitySuffix}`);
+        } catch (error) {
+          await fs.mkdir(`${innerDirectory}/${qualitySuffix}`);
+        }
+      }
+
+      const pathToFile = `${innerDirectory}${qualitySuffix ? `/${qualitySuffix}` : ''}${hash}_${qualitySuffix}`;
       await fs.writeFile(pathToFile, file, { encoding: 'utf8' });
       dbQueries.push({
         hash,
@@ -54,71 +63,11 @@ FileService.saveFileData = async ({ files, ownerType }) => {
         pathToFile,
         mimeType: mimetype,
       });
-      links.push(`${baseAssetUrl}/source/${ownerType}/${hash}${qualitySuffix}`);
+      // links.push(`${baseAssetUrl}/source/${ownerType}/${hash}${qualitySuffix}`);
     }),
   );
   // await Models.FileModel.insertMany();
   console.log(dbQueries);
   console.log(links);
-  return links;
+  return dbQueries;
 };
-
-// const {
-//   stat,
-//   promises
-// } = require('fs')
-// const {
-//   unlink,
-//   readdir,
-//   mkdir,
-//   writeFile: write,
-//   readFile: read
-// } = promises
-//
-// module.exports = {
-//   clearFolder: async ({ filePath }) => {
-//     if (!filePath) {
-//       return
-//     }
-//
-//     const files = await readdir(filePath)
-//
-//     if (files.length) {
-//       for (let file of files) {
-//         await unlink(filePath + file)
-//       }
-//     }
-//   },
-//   readFolder: async ({ filePath }) => {
-//     if (!filePath) {
-//       return null
-//     }
-//
-//     return await readdir(filePath)
-//   },
-//   createFolder: async ({ filePath } = {}) => {
-//     stat(filePath, async (err, stats) => {
-//       if (!stats) {
-//         await mkdir(filePath)
-//       }
-//     })
-//   },
-//   writeFile: async ({ data, filePath }) => {
-//     if (!filePath || !data) {
-//       return null
-//     }
-//
-//     await write(filePath, JSON.stringify(data, null, 2))
-//   },
-//   readFile: async ({ filePath }) => {
-//     if (!filePath) {
-//       return null
-//     }
-//
-//     const file = await read(filePath, {
-//       encoding: `utf-8`
-//     })
-//
-//     return JSON.parse(file)
-//   }
-// }

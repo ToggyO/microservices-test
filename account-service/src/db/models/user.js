@@ -47,6 +47,13 @@ const scheme = (sequelize, DataTypes) => ({
     _isEditable: true,
     _isCreatable: true,
   },
+  avatar: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue: null,
+    _isEditable: true,
+    _isCreatable: true,
+  },
   createdAt: {
     field: 'created_at',
     type: DataTypes.DATE,

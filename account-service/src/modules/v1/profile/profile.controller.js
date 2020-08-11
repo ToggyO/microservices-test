@@ -71,7 +71,7 @@ ProfileController.updateCurrentUserProfile = async (req, res, next) => {
  */
 ProfileController.uploadAvatar = async (req, res, next) => {
   try {
-    const avatar = getProp(req, 'file', null);
+    const avatar = getProp(req, 'files', null);
 
     // if (!avatar || !Object.keys(avatar).length) {
     //   throw new ApplicationError({
@@ -83,6 +83,8 @@ ProfileController.uploadAvatar = async (req, res, next) => {
     // }
 
     const resultData = await ProfileService.uploadAvatar({ avatar });
+
+
 
     res.status(201).send(getSuccessRes({ resultData }));
   } catch (error) {

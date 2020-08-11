@@ -22,6 +22,9 @@ class AxiosClient {
     // Request interceptors
     localAxios.interceptors.request.use(reqConfig => {
       let cacheHeaders = {};
+      reqConfig.maxContentLength = Infinity;
+      reqConfig.maxBodyLength = Infinity;
+
       if (reqConfig.method.toLowerCase() === 'get') {
         cacheHeaders = {
           ...cacheHeaders,

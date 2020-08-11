@@ -10,6 +10,7 @@ export const ProfileService = Object.create(basicService);
 ProfileService.uploadAvatar = async ({ avatar }) => {
   const axios = getAxios();
   const transformed = await getResizedImage(avatar);
+
   const response = await axios.post(
     'http://0.0.0.0:3011/files',
     { files: transformed, ownerType: 'users' },

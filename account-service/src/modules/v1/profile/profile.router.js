@@ -151,8 +151,8 @@ export const createRouter = () => {
   router.post(
     '/avatar',
     // asyncWrapper(authenticate(null)),
-    // upload.array('files', 8),
-    upload.single('file'),
+    upload.array('files', 8),
+    // upload.single('file'),
     asyncWrapper(ProfileController.uploadAvatar),
   );
 

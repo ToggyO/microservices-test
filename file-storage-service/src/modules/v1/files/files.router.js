@@ -21,7 +21,7 @@ export class CreateRouter {
      * Get file by hash
      * @swagger
      * path:
-     *  /files/source/{ownerType}/{hash}:
+     *  /source/{ownerType}/{hash}:
      *      get:
      *        tags:
      *          - Files
