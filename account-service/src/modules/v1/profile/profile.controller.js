@@ -71,7 +71,10 @@ ProfileController.updateCurrentUserProfile = async (req, res, next) => {
  */
 ProfileController.uploadAvatar = async (req, res, next) => {
   try {
+    const id = parseInt(getProp(req, '_userData.id'), 10);
     const avatar = getProp(req, 'files', null);
+
+    if (!id) throw new ApplicationError(notFoundErrorPayload);
 
     // if (!avatar || !Object.keys(avatar).length) {
     //   throw new ApplicationError({
@@ -82,9 +85,10 @@ ProfileController.uploadAvatar = async (req, res, next) => {
     //   });
     // }
 
-    const resultData = await ProfileService.uploadAvatar({ avatar });
+    // const resultData = await ProfileService.uploadAvatar({ avatar, id });
+    await ProfileService.uploadAvatar({ avatar, id });
 
-
+    const resultData = await UserController._getEntityResponse({ id });
 
     res.status(201).send(getSuccessRes({ resultData }));
   } catch (error) {

@@ -2,7 +2,7 @@
  * Описание: Файл содержит контроллер для обработки роутинга модуля пользователей
  */
 import { ApplicationError, getSuccessRes } from '@utils/response';
-import { getProp } from '@utils/helpers';
+import { getProp, getFileURL } from '@utils/helpers';
 import { ERROR_CODES } from '@constants';
 import { UserService } from './user.service';
 import { USER_ERROR_MESSAGES } from './constants';
@@ -29,11 +29,17 @@ UserController._getEntityResponse = async ({ id, include = null }) => {
     model: UserModel,
   });
 
-  return UserService.getUser({
+  const user = await UserService.getUser({
     where: { id },
     attributes: userAttributes,
     include,
   });
+
+  if (user.avatar) {
+    user.avatar = getFileURL(user.avatar, 'users');
+  }
+
+  return user;
 };
 
 /**

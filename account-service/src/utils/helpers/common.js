@@ -1,6 +1,8 @@
 /**
  * Описание: Вспомогательные функции
  */
+import config from '@config';
+import { getFileServiceBaseUrl } from './getAppsBaseUrl';
 
 /**
  * Проверка что значение не пустое
@@ -52,4 +54,20 @@ export function getFileExtension(filename) {
   const fileName = filename.replace(/\.[^/.]+$/, '');
   const ext = filename.split('.').pop();
   return [fileName, ext];
+}
+
+/**
+ * Отделение расширения файла от имени
+ * @param {string} fileName - имя файла
+ * @param {string} ownerType - имя сущности, к которой относится файл
+ * @returns {object} - объект, содержащий ссылки на файлы
+ */
+export function getFileURL(fileName, ownerType) {
+  return config.RESIZE_RESOLUTION_LIST
+    .reduce((acc, curr) => {
+      acc[curr] = `${getFileServiceBaseUrl()}/source/${ownerType}/${curr}/${fileName}`;
+      return acc;
+    }, {
+      originalFile: `${getFileServiceBaseUrl()}/source/${ownerType}/${fileName}`,
+    });
 }

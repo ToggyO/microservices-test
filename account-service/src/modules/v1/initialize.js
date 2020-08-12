@@ -6,6 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
 import config from '@config';
+import { getAppBaseUrl } from '@utils/helpers';
 import { ERROR_CODES } from '@constants';
 // инициализаторы роутинга
 import { createRouter as createAuthRouter } from './auth/auth.router';
@@ -79,9 +80,10 @@ export const initializeSwagger = ({ basePath }) => {
       basePath,
       servers: [
         {
-          url: isProduction
-            ? `http://${config.NGINX_HOST}:${config.NGINX_PORT}`
-            : `http://${config.MIC_ACCOUNT_HOST}:${config.MIC_ACCOUNT_PORT}`,
+          // url: isProduction
+          //   ? `http://${config.NGINX_HOST}:${config.NGINX_PORT}`
+          //   : `http://${config.MIC_ACCOUNT_HOST}:${config.MIC_ACCOUNT_PORT}`,
+          url: getAppBaseUrl(),
           description: `${isProduction ? 'Production' : 'Local'} server`,
         },
       ],

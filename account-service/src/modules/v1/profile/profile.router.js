@@ -115,6 +115,7 @@ export const createRouter = () => {
    */
   router.put('/me', asyncWrapper(authenticate(null)), asyncWrapper(ProfileController.updateCurrentUserProfile));
 
+  // FIXME: работать ответы в сваггере
   /**
    * Upload user's avatar
    * @swagger
@@ -125,6 +126,8 @@ export const createRouter = () => {
    *          - Profile
    *        description: Upload user's avatar
    *        summary: Upload user's avatar
+   *        security:
+   *          - BearerAuth: []
    *        requestBody:
    *          content:
    *            multipart/form-data:
@@ -150,7 +153,7 @@ export const createRouter = () => {
    */
   router.post(
     '/avatar',
-    // asyncWrapper(authenticate(null)),
+    asyncWrapper(authenticate(null)),
     upload.array('files', 8),
     // upload.single('file'),
     asyncWrapper(ProfileController.uploadAvatar),

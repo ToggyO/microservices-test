@@ -1,19 +1,18 @@
 /**
  * Описание: Файл содержит сервис для модуля профиля текущего пользователя
  */
-import { basicService, getResizedImage } from '@utils/helpers';
+import { basicService } from '@utils/helpers';
 import { getAxios } from '@utils/network/axiosClient';
 import { ApplicationError } from '@utils/response';
+import { UserModel } from '../user/user.model';
 
 export const ProfileService = Object.create(basicService);
 
-ProfileService.uploadAvatar = async ({ avatar }) => {
+ProfileService.uploadAvatar = async ({ avatar, id }) => {
   const axios = getAxios();
-  const transformed = await getResizedImage(avatar);
-
   const response = await axios.post(
     'http://0.0.0.0:3011/files',
-    { files: transformed, ownerType: 'users' },
+    { files: avatar, ownerType: 'users' },
   );
 
   if (response.status !== 201) {
@@ -27,5 +26,16 @@ ProfileService.uploadAvatar = async ({ avatar }) => {
     });
   }
 
-  return response;
+  const { data = {} } = response;
+  const { resultData } = data;
+
+  await UserModel.update(
+    { avatar: resultData[0].hash },
+    {
+      where: { id },
+      returning: false,
+    },
+  );
+
+  return resultData;
 };

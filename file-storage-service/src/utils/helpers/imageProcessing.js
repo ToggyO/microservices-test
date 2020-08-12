@@ -12,10 +12,10 @@ import { getFileExtension } from './common';
  * @param {Array<string>} sizes - разрешения, для которых необходимо создать копии
  * @returns {void}
  */
-const imageProcessing = async (image, sizes) => {
+export const imageProcessing = async (image, sizes) => {
   const clonedImage = { ...image };
-  console.log(clonedImage.buffer);
-  const processedOriginalBuffer = await sharp(clonedImage.buffer)
+  const file = Buffer.from(clonedImage.buffer.data);
+  const processedOriginalBuffer = await sharp(file)
     .jpeg({
       quality: 100,
       force: false,
@@ -23,7 +23,8 @@ const imageProcessing = async (image, sizes) => {
     .png({
       quality: 100,
       force: false,
-    });
+    })
+    .toBuffer();
 
   const images = {
     originalFile: {
@@ -34,7 +35,7 @@ const imageProcessing = async (image, sizes) => {
 
   await Promise.all(
     sizes.map(async size => {
-      const resizedBuffer = await sharp(clonedImage.buffer)
+      const resizedBuffer = await sharp(file)
         .resize({
           width: parseInt(size, 10),
           fit: sharp.fit.inside,
@@ -46,7 +47,7 @@ const imageProcessing = async (image, sizes) => {
 
       const resized = {
         ...clonedImage,
-        originalname: `${fileName}_360.${fileExt}`,
+        originalname: `${fileName}_${size}.${fileExt}`,
         buffer: resizedBuffer,
         size: resizedBuffer.length,
       };
@@ -64,7 +65,7 @@ const imageProcessing = async (image, sizes) => {
  * @param {Array<string>} sizes - разрешения, для которых необходимо создать копии
  * @returns {void}
  */
-export const getResizedImage = async (assets, sizes = []) => {
+export const getProcessedImages = async (assets, sizes = []) => {
   const withResizedImages = [];
 
   if (Array.isArray(assets)) {

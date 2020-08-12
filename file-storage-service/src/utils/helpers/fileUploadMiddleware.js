@@ -1,6 +1,7 @@
 /**
  * Описание: Файл содержит функцию для обработки входящих файлов
  */
+// FIXME: не используется
 import multer from 'multer';
 
 import config from 'config';

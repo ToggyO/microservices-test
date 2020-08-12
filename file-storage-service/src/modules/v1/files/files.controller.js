@@ -21,33 +21,62 @@ export const FileController = {};
  */
 FileController.getFile = async (req, res, next) => {
   try {
-    const hash = getProp(req.params, 'hash', null);
-    const ownerType = getProp(req.ownerType, 'hash', null);
-    if (!hash || !ownerType) {
+    const pathname = getProp(req.params, '0', null);
+    const splittedPathname = pathname.split('/');
+
+    const queries = splittedPathname.reverse().reduce((acc, curr, index) => {
+      let key = null;
+      switch (index) {
+        case 0:
+          return {
+            ...acc,
+            hash: curr,
+          };
+        case 1:
+          if (splittedPathname.length > 2) {
+            key = 'subDir';
+          } else {
+            key = 'ownerType';
+          }
+          return {
+            ...acc,
+            [key]: curr,
+          };
+        case 2:
+          return {
+            ...acc,
+            ownerType: curr,
+          };
+        default:
+          return acc;
+      }
+    }, {});
+
+    if (!queries.hash) {
       res.status(404).end();
     }
 
-    const { pathToFile, mimeType } = await FileService.getFileData({ conditions: { hash, ownerType } });
+    const { pathToFile, mimeType } = await FileService.getFileData({ conditions: { hash: queries.hash } });
 
     if (!pathToFile || !mimeType) {
       return res.status(404).end();
     }
 
-    const file = path.join(process.cwd(), pathToFile);
+    let resultPath = null;
+
+    if (queries.subDir) {
+      const indexOfHash = pathToFile.indexOf(queries.hash);
+      const splitted = pathToFile.substr(0, indexOfHash);
+      resultPath = `${splitted}${queries.subDir}/${queries.hash}`;
+    } else {
+      resultPath = pathToFile;
+    }
+
+    const file = path.join(process.cwd(), resultPath);
     const stream = fs.createReadStream(file);
 
     res.set('Content-Type', mimeType);
     stream.pipe(res);
-
-    // stream.on('open', () => {
-    //   res.set('Content-Type', mimeType);
-    //   stream.pipe(res);
-    // });
-    //
-    // stream.on('error', () => {
-    //   res.set('Content-Type', 'text/plain');
-    //   res.status(404).end();
-    // });
   } catch (error) {
     next(error);
   }
