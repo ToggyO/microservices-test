@@ -29,3 +29,5 @@ export const run = async ({ app } = {}) => {
     console.info('Ошибка соединения с базой данных! ', error);
   }
 };
+// db connection string
+// mongodb://microservices-files-service-root:Qwe123!@0.0.0.0:27027/microservices-files-service

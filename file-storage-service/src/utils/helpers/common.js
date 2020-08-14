@@ -53,3 +53,39 @@ export function getFileExtension(filename) {
   const ext = filename.split('.').pop();
   return [fileName, ext];
 }
+
+/**
+ * Парсинг входящей URI вплоть до 3-х элементов через слэш "/"
+ * @param {string} pathname - строка URI
+ * @returns {object} - объект с параметрами URI
+ */
+export function parseFileRequestURL(pathname) {
+  const splittedPathname = pathname.split('/');
+  return splittedPathname.reverse().reduce((acc, curr, index) => {
+    let key = null;
+    switch (index) {
+      case 0:
+        return {
+          ...acc,
+          hash: curr,
+        };
+      case 1:
+        if (splittedPathname.length > 2) {
+          key = 'subDir';
+        } else {
+          key = 'ownerType';
+        }
+        return {
+          ...acc,
+          [key]: curr,
+        };
+      case 2:
+        return {
+          ...acc,
+          ownerType: curr,
+        };
+      default:
+        return acc;
+    }
+  }, {});
+}

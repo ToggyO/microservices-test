@@ -27,3 +27,4 @@ npm-debug.log
 .tmp
 log
 /nginx_logs
+/file-storage-service/tmp

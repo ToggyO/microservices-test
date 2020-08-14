@@ -2,6 +2,7 @@
  * Описание: Конструктор сервисов, который используется для инициализации сервисов модулей
  */
 import { getProp, isObjectEmpty } from './common';
+import { leopoldFilterParser, leopoldFilterParserSequelize, leopoldSortParserSequelize } from '../leopold';
 
 export const basicService = {
   /**
@@ -61,7 +62,7 @@ export const basicService = {
    * @param {object} schema
    * @returns {object|array}
    */
-  _dryPayload(payload = {}, schema = {}) {
+  _dryPayload: (payload = {}, schema = {}) => {
     return (
       Object.keys(schema).reduce((accumulator, propName) => {
         let data = {};
@@ -97,6 +98,49 @@ export const basicService = {
       offset: page * pageSize,
       limit: pageSize,
     };
+  },
+
+  /**
+   * Парсинг сортировки из query параметров
+   * @param {object} query
+   * @returns {array}
+   */
+  _getSort: ({ query = {} } = {}) => {
+    let sort = getProp(query, 'sort');
+
+    if (!sort) {
+      return [];
+    }
+
+    if (Array.isArray(sort) && sort.length > 1) {
+      sort = [sort[0]];
+    }
+
+    if (typeof sort === 'string') {
+      sort = [sort];
+    }
+
+    return leopoldSortParserSequelize(sort);
+  },
+
+  /**
+   * Использовать форматированный параметр `filter`
+   * @param {object} query
+   * @returns {{}|*|{}}
+   */
+  _getFilter: ({ query = {} } = {}) => {
+    let queryFilter = getProp(query, 'filter');
+
+    if (!queryFilter) {
+      return {};
+    }
+
+    if (typeof queryFilter === 'string') {
+      queryFilter = [queryFilter];
+    }
+
+    const filterRaw = leopoldFilterParser(queryFilter);
+    return leopoldFilterParserSequelize(filterRaw);
   },
 
   /**

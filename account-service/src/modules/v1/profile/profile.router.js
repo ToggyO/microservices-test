@@ -112,6 +112,12 @@ export const createRouter = () => {
    *                schema:
    *                  type: object
    *                  $ref: '#/components/schemas/forbiddenResponse'
+   *          404:
+   *            content:
+   *              application/json:
+   *                schema:
+   *                  type: object
+   *                  $ref: '#/components/schemas/notFoundResponse'
    */
   router.put('/me', asyncWrapper(authenticate(null)), asyncWrapper(ProfileController.updateCurrentUserProfile));
 
@@ -150,6 +156,18 @@ export const createRouter = () => {
    *                      example: 0
    *                    resultData:
    *                      type: object
+   *          404:
+   *            content:
+   *              application/json:
+   *                schema:
+   *                  type: object
+   *                  $ref: '#/components/schemas/notFoundResponse'
+   *          422:
+   *            content:
+   *              application/json:
+   *                schema:
+   *                  type: object
+   *                  $ref: '#/components/schemas/unprocessableEntityResponse'
    */
   router.post(
     '/avatar',
@@ -158,6 +176,40 @@ export const createRouter = () => {
     // upload.single('file'),
     asyncWrapper(ProfileController.uploadAvatar),
   );
+
+  /**
+   * Delete user's avatar
+   * @swagger
+   * path:
+   *  /account/profile/avatar:
+   *      delete:
+   *        tags:
+   *          - Profile
+   *        description: Delete user's avatar
+   *        summary: Delete user's avatar
+   *        security:
+   *          - BearerAuth: []
+   *        responses:
+   *          200:
+   *            description: Successful operation
+   *            content:
+   *              application/json:
+   *                schema:
+   *                  type: object
+   *                  properties:
+   *                    errorCode:
+   *                      type: number
+   *                      example: 0
+   *                    resultData:
+   *                      type: object
+   *          404:
+   *            content:
+   *              application/json:
+   *                schema:
+   *                  type: object
+   *                  $ref: '#/components/schemas/notFoundResponse'
+   */
+  router.delete('/avatar', asyncWrapper(authenticate(null)), asyncWrapper(ProfileController.deleteAvatar));
 
   return router;
 };

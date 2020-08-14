@@ -2,6 +2,8 @@
  * Описание: Файл содержит сервис для модуля Партнеры
  */
 import { getProp, basicService, customCrypto } from '@utils/helpers';
+import { ApplicationError } from '@utils/response';
+import { ERROR_CODES } from '@constants';
 import { UserModel } from './user.model';
 import { UserValidator } from './user.validator';
 
@@ -16,19 +18,22 @@ UserService._getModels = () => UserModel._getModels();
  * @param {array} [attributes]
  * @param {array} [include]
  * @param {object} pagination
+ * @param {array} order
  * @returns {Promise<object>}
  */
 UserService.getUsers = async function ({
   where = {},
-  attributes,
-  include,
+  attributes = [],
+  include = [],
   pagination = {},
+  order = [],
 } = {}) {
   const users = await UserModel.findAndCountAll({
     where,
     ...(Array.isArray(attributes) ? { attributes } : {}),
     ...(Array.isArray(include) ? { include } : {}),
     ...pagination,
+    order,
   });
   const items = getProp(users, 'rows', []);
   const count = getProp(users, 'count', []);
@@ -47,8 +52,8 @@ UserService.getUsers = async function ({
  */
 UserService.getUser = async function ({
   where = {},
-  attributes,
-  include,
+  attributes = [],
+  include = [],
 } = {}) {
   return UserModel.findOne({
     where,
@@ -66,6 +71,17 @@ UserService.createUser = async function ({ values = {} }) {
   const driedValues = UserService._dryPayload(values, UserService._createPayloadSchema());
 
   await UserValidator.createUpdateUserValidator(driedValues);
+
+  const isExists = await UserService.getUser({ where: { email: driedValues.email } });
+
+  if (isExists) {
+    throw new ApplicationError({
+      statusCode: 409,
+      errorCode: ERROR_CODES.conflict,
+      errorMessage: 'User with the same email already exists',
+      errors: [],
+    });
+  }
 
   const withHashedData = (data) => ({
     ...data,

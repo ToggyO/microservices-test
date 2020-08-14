@@ -11,6 +11,7 @@ export const ERROR_CODES = {
   authorization__invalid_credentials_error: 'authorization__invalid_credentials_error',
   //
   notAcceptable: 406,
+  conflict: 409,
   // ошибки безопасности
   security__unauthorized_error: 2001,
   security__invalid_token_error: 2020,

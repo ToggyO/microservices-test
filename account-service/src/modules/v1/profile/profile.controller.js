@@ -3,7 +3,7 @@
  */
 import { getProp } from '@utils/helpers';
 import { ApplicationError, getSuccessRes } from '@utils/response';
-import { ERROR_CODES } from '@constants';
+import { ERROR_CODES, UNPROCESSABLE_ENTITY } from '@constants';
 import { USER_ERROR_MESSAGES } from '../user/constants';
 import { UserController } from '../user/user.controller';
 import { UserService } from '../user/user.service';
@@ -63,7 +63,7 @@ ProfileController.updateCurrentUserProfile = async (req, res, next) => {
 };
 
 /**
- * Загрузить текущего авторизированного пользователя
+ * Загрузить аватар текущего авторизированного пользователя
  * @param req
  * @param res
  * @param next
@@ -72,25 +72,51 @@ ProfileController.updateCurrentUserProfile = async (req, res, next) => {
 ProfileController.uploadAvatar = async (req, res, next) => {
   try {
     const id = parseInt(getProp(req, '_userData.id'), 10);
+    const oldHash = getProp(req, '_userData.avatar.fileName');
     const avatar = getProp(req, 'files', null);
 
     if (!id) throw new ApplicationError(notFoundErrorPayload);
 
-    // if (!avatar || !Object.keys(avatar).length) {
-    //   throw new ApplicationError({
-    //     statusCode: 422,
-    //     errorMessage: FILES_ERROR_MESSAGES.NO_FILES,
-    //     errorCode: UNPROCESSABLE_ENTITY,
-    //     errors: [],
-    //   });
-    // }
+    if (!avatar || !Object.keys(avatar).length) {
+      throw new ApplicationError({
+        statusCode: 422,
+        errorMessage: 'No files was uploaded',
+        errorCode: UNPROCESSABLE_ENTITY,
+        errors: [],
+      });
+    }
 
     // const resultData = await ProfileService.uploadAvatar({ avatar, id });
-    await ProfileService.uploadAvatar({ avatar, id });
+    await ProfileService.uploadAvatar({ avatar, id, oldHash });
 
-    const resultData = await UserController._getEntityResponse({ id });
+    const resultData = await UserController._getEntityResponse({ id, withAvatar: true });
 
     res.status(201).send(getSuccessRes({ resultData }));
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Удалить аватар текущего авторизированного пользователя
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Promise<void>}
+ */
+ProfileController.deleteAvatar = async (req, res, next) => {
+  try {
+    const id = parseInt(getProp(req, '_userData.id'), 10);
+    const avatar = getProp(req, '_userData.avatar', null);
+    // const fileName = getProp(req.body, 'fileName', null);
+
+    if (!id || !avatar) throw new ApplicationError(notFoundErrorPayload);
+    // if (!id || !fileName) throw new ApplicationError(notFoundErrorPayload);
+
+    const resultData = await ProfileService.deleteAvatar({ id, file: avatar });
+    // const resultData = await ProfileService.deleteAvatar({ id, file: fileName });
+
+    res.status(200).send(getSuccessRes({ resultData }));
   } catch (error) {
     next(error);
   }

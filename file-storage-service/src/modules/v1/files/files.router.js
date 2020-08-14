@@ -33,13 +33,22 @@ export class CreateRouter {
      *            content:
      *              application/json:
      *                schema:
+     *                  type: string
+     *                  format: binary
+     *          404:
+     *            description: Not found
+     *            content:
+     *              application/json:
+     *                schema:
      *                  type: object
      *                  properties:
      *                    errorCode:
      *                      type: number
      *                      example: 0
-     *                    resultData:
-     *                      type: object
+     *                    errorMessage:
+     *                      type: string
+     *                    errors:
+     *                      type: array
      */
     router.get('/source/*', asyncWrapper(FileController.getFile));
 
@@ -77,8 +86,106 @@ export class CreateRouter {
      *                      example: 0
      *                    resultData:
      *                      type: object
+     *          404:
+     *            description: Not found
+     *            content:
+     *              application/json:
+     *                schema:
+     *                  type: object
+     *                  properties:
+     *                    errorCode:
+     *                      type: number
+     *                      example: 0
+     *                    errorMessage:
+     *                      type: string
+     *                    errors:
+     *                      type: array
+     *          422:
+     *            description: Successful operation
+     *            content:
+     *              application/json:
+     *                schema:
+     *                  type: object
+     *                  properties:
+     *                    errorCode:
+     *                      type: number
+     *                      example: 0
+     *                    errorMessage:
+     *                      type: string
+     *                    errors:
+     *                      type: array
      */
     router.post('/', asyncWrapper(FileController.saveFile));
+
+    /**
+     * Delete file
+     * @swagger
+     * path:
+     *  /files:
+     *     delete:
+     *        tags:
+     *          - Files
+     *        description: Delete file
+     *        summary: Delete file
+     *        produces:
+     *          - application/json
+     *        requestBody:
+     *          content:
+     *            application/json:
+     *              schema:
+     *                type: object
+     *                properties:
+     *                  fileName:
+     *                    type: string
+     *                  resolutions:
+     *                    type: array
+     *                    items:
+     *                      type: string
+     *                required:
+     *                  - fileName
+     *        responses:
+     *          200:
+     *            description: Successful operation
+     *            content:
+     *              application/json:
+     *                schema:
+     *                  type: object
+     *                  properties:
+     *                    errorCode:
+     *                      type: number
+     *                      example: 0
+     *                    resultData:
+     *                      type: object
+     *          404:
+     *            description: Not found
+     *            content:
+     *              application/json:
+     *                schema:
+     *                  type: object
+     *                  properties:
+     *                    errorCode:
+     *                      type: number
+     *                      example: 0
+     *                    errorMessage:
+     *                      type: string
+     *                    errors:
+     *                      type: array
+     *          422:
+     *            description: Successful operation
+     *            content:
+     *              application/json:
+     *                schema:
+     *                  type: object
+     *                  properties:
+     *                    errorCode:
+     *                      type: number
+     *                      example: 0
+     *                    errorMessage:
+     *                      type: string
+     *                    errors:
+     *                      type: array
+     */
+    router.delete('/', asyncWrapper(FileController.deleteFile));
 
     return router;
   }

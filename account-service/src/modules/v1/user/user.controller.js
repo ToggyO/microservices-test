@@ -22,9 +22,10 @@ const notFoundErrorPayload = {
  * на операции создания / редактирования / получения по id
  * @param {string|number} id
  * @param {array} include
+ * @param {boolean} withAvatar
  * @returns {Promise<object>}
  */
-UserController._getEntityResponse = async ({ id, include = null }) => {
+UserController._getEntityResponse = async ({ id, include = null, withAvatar = false }) => {
   const userAttributes = UserService._getModelAttributes({
     model: UserModel,
   });
@@ -35,7 +36,7 @@ UserController._getEntityResponse = async ({ id, include = null }) => {
     include,
   });
 
-  if (user.avatar) {
+  if (withAvatar && user.avatar) {
     user.avatar = getFileURL(user.avatar, 'users');
   }
 
@@ -52,13 +53,17 @@ UserController._getEntityResponse = async ({ id, include = null }) => {
 UserController.getUsers = async (req, res, next) => {
   try {
     const query = getProp(req, 'query', {});
-    const pagination = UserService._getPagination({ query });
 
+    const pagination = UserService._getPagination({ query });
     const userAttributes = UserService._getModelAttributes({ model: UserModel });
+    const order = UserService._getSort({ query });
+    const filter = UserService._getFilter({ query });
 
     const resultData = await UserService.getUsers({
+      where: { ...filter },
       pagination,
       attributes: userAttributes,
+      order: order.length ? order : undefined,
     });
 
     res.status(200).send(getSuccessRes({ resultData }));
@@ -80,7 +85,7 @@ UserController.getUser = async (req, res, next) => {
 
     if (!id) throw new ApplicationError(notFoundErrorPayload);
 
-    const resultData = await UserController._getEntityResponse({ id });
+    const resultData = await UserController._getEntityResponse({ id, withAvatar: true });
 
     if (!resultData) throw new ApplicationError(notFoundErrorPayload);
 

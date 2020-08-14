@@ -48,7 +48,7 @@ export const authenticate = (allowedRoles = []) => async (req, res, next) => {
   }
 
   const { userId } = await checkToken(accessToken);
-  const userData = await UserController._getEntityResponse({ id: userId });
+  const userData = await UserController._getEntityResponse({ id: userId, withAvatar: true });
   req._userData = userData.dataValues;
 
   // if (allowedRoles !== null && !allowedRoles.includes(userData.role)) {

@@ -17,7 +17,7 @@ export const POSSIBLE_CODES = {
 };
 
 export const SUCCESS = POSSIBLE_CODES.success;
-export const NOT_FOUND = POSSIBLE_CODES.success;
+export const NOT_FOUND = POSSIBLE_CODES.not_found;
 export const BUSINESS_CONFLICT = POSSIBLE_CODES.business_conflict;
 export const BAD_PARAMETERS = POSSIBLE_CODES.bad_parameters;
 export const UNPROCESSABLE_ENTITY = POSSIBLE_CODES.unprocessable_entity;

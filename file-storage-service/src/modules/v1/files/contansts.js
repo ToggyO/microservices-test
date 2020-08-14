@@ -4,4 +4,5 @@
 export const FILES_ERROR_MESSAGES = {
   NO_FILES: 'No files were uploaded.',
   NO_OWNER_TYPE: 'No owner type was provided',
+  NOT_FOUND: 'File not found',
 };

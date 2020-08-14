@@ -68,6 +68,7 @@ export function getFileURL(fileName, ownerType) {
       acc[curr] = `${getFileServiceBaseUrl()}/source/${ownerType}/${curr}/${fileName}`;
       return acc;
     }, {
+      fileName,
       originalFile: `${getFileServiceBaseUrl()}/source/${ownerType}/${fileName}`,
     });
 }

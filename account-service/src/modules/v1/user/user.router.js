@@ -28,6 +28,7 @@ export const createRouter = () => {
 	 *        parameters:
    *          - $ref: '#/components/schemas/paginationPage'
    *          - $ref: '#/components/schemas/paginationSize'
+   *          - $ref: '#/components/schemas/sort'
 	 *        responses:
 	 *          200:
 	 *            description: Successful operation
@@ -65,7 +66,7 @@ export const createRouter = () => {
   router.get('/', asyncWrapper(UserController.getUsers));
 
   /**
-	 * Get list user by id
+	 * Get user by id
 	 * @swagger
 	 * path:
 	 *  /account/users/{id}:

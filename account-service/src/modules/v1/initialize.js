@@ -7,7 +7,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 import config from '@config';
 import { getAppBaseUrl } from '@utils/helpers';
-import { ERROR_CODES } from '@constants';
+import { ERROR_CODES, UNPROCESSABLE_ENTITY } from '@constants';
 // инициализаторы роутинга
 import { createRouter as createAuthRouter } from './auth/auth.router';
 import { createRouter as createUserRouter } from './user/user.router';
@@ -120,6 +120,18 @@ export const initializeSwagger = ({ basePath }) => {
               // default: 10,
             },
           },
+          sort: {
+            in: 'query',
+            name: 'sort',
+            description: 'Sorter rules: asc sorting - `{fieldName}`, desc sorting - `!{fieldName}`',
+            required: false,
+            schema: {
+              type: 'array',
+              items: {
+                type: 'string',
+              },
+            },
+          },
           paginationResponse: {
             type: 'object',
             properties: {
@@ -172,6 +184,14 @@ export const initializeSwagger = ({ basePath }) => {
             type: 'object',
             properties: {
               errorCode: { type: 'number', example: ERROR_CODES.not_found },
+              errorMessage: { type: 'string' },
+            },
+          },
+          unprocessableEntityResponse: {
+            description: 'Unprocessable entity',
+            type: 'object',
+            properties: {
+              errorCode: { type: 'number', example: UNPROCESSABLE_ENTITY },
               errorMessage: { type: 'string' },
             },
           },
