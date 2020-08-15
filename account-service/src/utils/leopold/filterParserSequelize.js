@@ -11,6 +11,16 @@ import { BAD_PARAMETERS } from '@constants';
 const { Op } = Sequelize;
 
 /**
+ * Конкатенация фильтров для одного поля, которые должны применяться через оператор "И"
+ * @param {object} field
+ * @param {object} filter
+ * @returns {object}
+ */
+const _addAndFilter = (field = {}, filter = {}) => {
+  return { ...field, ...filter };
+};
+
+/**
  * Преобразование массива фильтров в объект,
  * который может быть подставлен в опцию where запросов к БД через sequelize
  * @param {array} filterArray - массив фильтров
@@ -56,7 +66,48 @@ export const leopoldFilterParserSequelize = (filterArray = []) => {
       filterTarget = filter;
     }
 
+    if (field && field.split('.').length > 1) {
+      field = `$${field}$`;
+    }
 
+    switch (operation) {
+      case 'eq':
+        filterTarget[field] = { [Op.eq]: value };
+        break;
+      case 'neq':
+        filterTarget[field] = { [Op.ne]: value };
+        break;
+      case 'nnull':
+        filterTarget[field] = { [Op.ne]: null };
+        break;
+      case 'in':
+        filterTarget[field] = { [Op.in]: value };
+        break;
+      case 'lk':
+        filterTarget[field] = { [Op.iLike]: value };
+        break;
+      case 'sw':
+        filterTarget[field] = { [Op.startsWith]: value };
+        break;
+      case 'ew':
+        filterTarget[field] = { [Op.endsWith]: value };
+        break;
+      case 'gt':
+        filterTarget[field] = _addAndFilter(filterTarget[field], { [Op.gt]: value });
+        break;
+      case 'gte':
+        filterTarget[field] = _addAndFilter(filterTarget[field], { [Op.gte]: value });
+        break;
+      case 'lt':
+        filterTarget[field] = _addAndFilter(filterTarget[field], { [Op.lt]: value });
+        break;
+      case 'lte':
+        filterTarget[field] = _addAndFilter(filterTarget[field], { [Op.lte]: value });
+        break;
+      default:
+        filterTarget[field][operation] = value;
+        break;
+    }
   });
 
   return filter;

@@ -29,6 +29,7 @@ export const createRouter = () => {
    *          - $ref: '#/components/schemas/paginationPage'
    *          - $ref: '#/components/schemas/paginationSize'
    *          - $ref: '#/components/schemas/sort'
+   *          - $ref: '#/components/schemas/filter'
 	 *        responses:
 	 *          200:
 	 *            description: Successful operation

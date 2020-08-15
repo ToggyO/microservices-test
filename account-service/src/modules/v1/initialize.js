@@ -59,7 +59,7 @@ export const initializeModels = ({ app } = {}) => {
  */
 export const initializeSwagger = ({ basePath }) => {
   const {
-    isProduction
+    isProduction,
   } = config;
 
   const modulesSwaggerSchemes = {
@@ -124,6 +124,23 @@ export const initializeSwagger = ({ basePath }) => {
             in: 'query',
             name: 'sort',
             description: 'Sorter rules: asc sorting - `{fieldName}`, desc sorting - `!{fieldName}`',
+            required: false,
+            schema: {
+              type: 'array',
+              items: {
+                type: 'string',
+              },
+            },
+          },
+          filter: {
+            in: 'query',
+            name: 'filter',
+            description: 'Filter (accepted operators: eq, neq, nnull, in, lk, sw, ew, gt, lt, lte).'
+              + ' Example: `field eq value` \n'
+              + 'By default all filters are used with AND operator. \n'
+              + 'Use "$" before field name to apply OR operator.'
+              + ' Example of usage by two columns: '
+              + '`filter=$name lk %substring%&filter=$organizationName lk %substring%`',
             required: false,
             schema: {
               type: 'array',
